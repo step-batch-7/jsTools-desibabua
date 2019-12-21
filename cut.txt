@@ -1,0 +1,152 @@
+Types of input ====>
+
+    1. node cut.js -f 1 sample1.txt 
+        a. file does not exist                                  |- handled in 3.b and 1.b
+        b. illegal count                                        |- handled in 4.b
+
+    2. node cut.js -f 1,2 sample1.text                          |- handled in 4.a
+
+    3. node cut.js -d "," -f 1 file.text                        |-handled in 2
+
+    4. node cut.js -d " " -f 1,2 sample1.text                   |- handled in 4.a
+        a. anyCount is illegal                                  |- handled in 4.b
+        b. file does not exist                                  |- handled in 3.b and 1.b
+
+    5. node cut.js -d " " -f 1-4 sample1.txt                    |- handled in 4.a
+
+    6. node cut.js -d " " sample.txt                            |- handled in 5.b
+
+    7. node cut.js -d " " -f 1 sample1.txt sample2.text         |- handled in 4.a and 3.a
+
+    8. cat sample1.txt | node cut.js -f 1 sample2.text          |- work same as 1.st 
+
+    9. cat sample1.txt | node cut.js -d ' ' -f 1                |- handled in 3.c
+        a. if it gives error                                    |-handled in 3.d
+
+
+
+=====================================================================
+
+
+    The last step
+[1.a]
+        * output => text = string
+            fields of line1 of first file
+            fields of line2 of first file
+            ....
+            fields of line1 of second file
+            fields of line2 of second file
+            ....
+
+
+        * input => Object = fileContent , field numbers in Array 
+             { content : [ [ ["some", "content" ,  "of" ,"file"] , [ "something" , "in" , "file"]],[["something" ,"in" ,"otherFile"]] ] , error : null }
+
+        * name => getContentFields
+
+[1.b]
+        * output => error
+            "error message"
+
+        * input => { content : null , error : "error message" }
+
+        * name => getErrorMessage
+
+
+---------------------------------------------------------
+
+The previous step 
+
+[2]
+        * output => Object [ having content in array(files) of array(lines) of string ]
+            { content : [ [ ["some", "content" ,  "of" ,"file"] , [ "something" , "in" , "file"]],[["something" ,"in" ,"otherFile"]] ] , error : null }
+
+        * input => object and object
+            { content : [ ["some content of file" , "something in file"] ,["other file content" ] ] , error : null }
+                    and  { fields : [1,2,3] , separator : " " }
+
+        * getSeparatedField
+
+---------------------------------------------------------
+
+    The previous step
+
+[3.a]
+        * output => Object = content (in array of array)
+            { content : [ ["some content of file" , "something in file"] ,["other file content" ] ] , error : null }
+
+        * input => Object  = parsedCommand
+            { fileName : ["a.text","b.text"]}
+
+[3.b]
+        * output => error
+            { content : null , error : "cut: badFile.txt : No such file or directory" }
+
+        * input => Object  = parsedCommand
+            { fileName : "badFile.text"}
+
+
+    * name => loadContentFromFile
+
+--------------------------------
+
+[3.c]
+        * output => array
+            stdin
+
+        * input = Object = content (in array)
+            { fields : [1,2,3] , separator : " " }
+
+[3.d]
+        * output => error
+            { error : "message" }
+
+        * input = Object = content (in array)
+            { fields : [1,2,3] , separator : " " }
+
+    * name => loadContentFromStdin
+
+
+--------------------------------------------------------
+
+    The previous step 
+[4.a]
+        * output => Object  = parsedCommand (modified fields)
+            { fileName : ["a.text","b.text"] , fields : [1,2,3] , separator : " " }
+
+        * input => Object  = parsedCommand
+            { fileName : "a.text" , fields : "1,2,3" , separator : " " } 
+
+        [Note : if "," then separate it by ","]
+        [Note : if "-" then create range ]
+        [Note : if combination of "-" and "," then separate by "," and make range if it has "-"]
+
+[4.b]
+        * output => error
+            { content : null , error : "cut: [-cf] list: illegal list value" }
+
+        * input => Object  = parsedCommand
+            { fileName : "a.text" , fields : "1,gd,3" , separator : " " }
+
+    * name => getFieldsToExtract
+
+---------------------------------------------------------
+
+    The first step 
+[5.a]
+        * output => Object = parsedCommand
+            { fileName : [ "a.text" , "b.text" ] , fields : "1,2,3" , separator : " " }
+
+        * input => Array = command
+            [ "node" , "cut.js" , "-d" , " ", "-f" , "1,2,3" , "a.txt","b.txt" ]
+
+[5.b]
+        * output => error
+            { error : "usage: cut -f list [-s] [-d delimiter] [file ...] " }
+
+        * input => Array = command
+            [ "node" , "cut.js" , "-d" , " ", "sample1.txt" ]
+
+        * name => AbstractCommands
+
+-----------------------------------------------------------
