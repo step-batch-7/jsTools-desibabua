@@ -1,10 +1,15 @@
 const assert = require("chai").assert;
-const { messageFormatter, getFields } = require("../cut");
+const {
+  messageFormatter,
+  getFields,
+  getContent,
+  getSeparatedFields
+} = require("../cut");
 
 describe("messageFormatter", function() {
-  it("should formate the message in right manner if context is there and separator is given", function() {
+  it("should formate the message in right manner if content is there and separator is given", function() {
     const data = {
-      context: [
+      content: [
         ["hello", "my"],
         ["this is", "my book"]
       ]
@@ -23,9 +28,9 @@ describe("messageFormatter", function() {
     assert.strictEqual(actualValue, expectedValue);
   });
 
-  it("should formate the message in right manner if context is there and separator is not given", function() {
+  it("should formate the message in right manner if content is there and separator is not given", function() {
     const data = {
-      context: [["hello my"], ["this is my book"]]
+      content: [["hello my"], ["this is my book"]]
     };
     let actualValue = messageFormatter(data);
     let expectedValue = "hello my\nthis is my book";
@@ -34,29 +39,83 @@ describe("messageFormatter", function() {
 });
 
 describe("getFields", function() {
-  it("should get the desired fields of given context when field is available", function() {
+  it("should get the desired fields of given content when field is available", function() {
     let data = {
-      context: [
-        ["hello", "my","name"],
+      content: [
+        ["hello", "my", "name"],
         ["this is", "my book"]
       ]
     };
     let fields = [1];
     let actualValue = getFields(data, fields);
-    let expectedValue = { context: [["hello"], ["this is"]] };
+    let expectedValue = { content: [["hello"], ["this is"]] };
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 
-  it("should get the desired fields of given context when field is not available", function() {
+  it("should get the desired fields of given content when field is not available", function() {
     let data = {
-      context: [
-        ["hello", "my","name"],
+      content: [
+        ["hello", "my", "name"],
         ["this is", "my book"]
       ]
     };
     let fields = [3];
     let actualValue = getFields(data, fields);
-    let expectedValue = { context: [["name"], []] };
+    let expectedValue = { content: [["name"], []] };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+});
+
+describe("loadContentFromFile", function() {
+  it("should loadContent from a file", function() {
+    const reader = function(path, encoding) {
+      assert.strictEqual("a.text", path);
+      assert.strictEqual("utf8", encoding);
+      return "this is a line of the file\nbut not in file";
+    };
+    const actualValue = getContent("a.text", reader);
+    const expectedValue = {
+      content: ["this is a line of the file", "but not in file"]
+    };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+
+  it("should give error when file is not present", function() {
+    const reader = function(path, encoding) {
+      assert.strictEqual("a.text", path);
+      assert.strictEqual("utf8", encoding);
+      throw { message: "file is not present" };
+    };
+    const actualValue = getContent("a.text", reader);
+    const expectedValue = { error: "file is not present" };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+});
+
+describe("getSeparatedLines", function() {
+  it("should separate lines by given separator", function() {
+    const data = {
+      content: ["hello,good morning", "this is my book,but i have one"]
+    };
+    let separator = " ";
+    let actualValue = getSeparatedFields(data, separator);
+    let expectedValue = {
+      content: [
+        ["hello,good", "morning"],
+        ["this", "is", "my", "book,but", "i", "have", "one"]
+      ]
+    };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+
+  it("should not separate lines when separator is not given", function() {
+    const data = {
+      content: ["hello,good morning", "this is my book,but i have one"]
+    };
+    let actualValue = getSeparatedFields(data);
+    let expectedValue = {
+      content: [["hello,good morning"],["this is my book,but i have one"]]
+    };
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 });
