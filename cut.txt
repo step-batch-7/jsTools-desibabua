@@ -4,24 +4,25 @@ Types of input ====>
         a. file does not exist                                  |- handled in 3.b and 1.b
         b. illegal count                                        |- handled in 4.b
 
-    2. node cut.js -f 1,2 sample1.text                          |- handled in 4.a
+    2. cat sample1.txt | node cut.js -d ' ' -f 1                |- handled in 3.c
+        a. if it gives error                                    |-handled in 3.d
 
-    3. node cut.js -d "," -f 1 file.text                        |-handled in 2
+    3. node cut.js -f 1,2 sample1.text                          |- handled in 4.a
 
-    4. node cut.js -d " " -f 1,2 sample1.text                   |- handled in 4.a
+    4. node cut.js -d "," -f 1 file.text                        |-handled in 2
+
+    5. node cut.js -d " " -f 1,2 sample1.text                   |- handled in 4.a
         a. anyCount is illegal                                  |- handled in 4.b
         b. file does not exist                                  |- handled in 3.b and 1.b
 
-    5. node cut.js -d " " -f 1-4 sample1.txt                    |- handled in 4.a
+    6. node cut.js -d " " -f 1-4 sample1.txt                    |- handled in 4.a
 
-    6. node cut.js -d " " sample.txt                            |- handled in 5.b
+    7. node cut.js -d " " sample.txt                            |- handled in 5.b
 
-    7. node cut.js -d " " -f 1 sample1.txt sample2.text         |- handled in 4.a and 3.a
+    8. node cut.js -d " " -f 1 sample1.txt sample2.text         |- handled in 4.a and 3.a
 
-    8. cat sample1.txt | node cut.js -f 1 sample2.text          |- work same as 1.st 
+    9. cat sample1.txt | node cut.js -f 1 sample2.text          |- work same as 1.st 
 
-    9. cat sample1.txt | node cut.js -d ' ' -f 1                |- handled in 3.c
-        a. if it gives error                                    |-handled in 3.d
 
 
 

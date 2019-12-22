@@ -1,0 +1,23 @@
+{
+  "name": "jstools-desibabua",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cut.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "allTest": "mocha && ./runAppTests.sh appTest/*.test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/step-batch-7/jsTools-desibabua.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/step-batch-7/jsTools-desibabua/issues"
+  },
+  "homepage": "https://github.com/step-batch-7/jsTools-desibabua#readme"
+}
