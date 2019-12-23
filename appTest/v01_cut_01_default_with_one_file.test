@@ -1,4 +1,4 @@
-cut -f 1 appTest/sample.txt
+node cut.js -f 1 appTest/sample.txt
 there is nothing in this file but it
 is for testing cut command.
 this , line , is , for testing , it with ,

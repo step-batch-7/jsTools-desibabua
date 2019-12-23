@@ -1,6 +1,16 @@
-const messageFormatter = function(data, separator) {
-  if (data.error) return data.error;
-  return data.content.map(line => line.join(separator)).join("\n");
+const getMessage = function(data, separator) {
+  let message = data.content.map(line => line.join(separator));
+  if (message[message.length - 1] == "") {
+    message.splice(message.length - 1);
+  }
+  return message.join("\n");
+};
+
+const messageFormatter = function(data, print, separator) {
+  if (data.error) {
+    return print.error(data.error);
+  }
+  return print.content(getMessage(data, separator));
 };
 
 const getFields = function(data, fields) {
@@ -16,7 +26,7 @@ const getContent = function(fileName, reader) {
     content = content.split("\n");
     return { content };
   } catch (err) {
-    return { error: [err.message] };
+    return { error: `cut: ${fileName}: No such file or directory` };
   }
 };
 
@@ -24,16 +34,16 @@ const getSeparatedFields = function(data, separator) {
   return { content: data.content.map(line => line.split(separator)) };
 };
 
-const performCut = function(contentOfFile, userArgs) {
+const performCut = function(contentOfFile, userArgs, print) {
   if (contentOfFile.content) {
     const separatedFields = getSeparatedFields(
       contentOfFile,
       userArgs.separator
     );
     const fields = getFields(separatedFields, userArgs.fields);
-    return messageFormatter(fields, userArgs.separator);
+    return messageFormatter(fields, print, userArgs.separator);
   } else {
-    return messageFormatter(contentOfFile, userArgs);
+    return messageFormatter(contentOfFile, print, userArgs);
   }
 };
 
@@ -41,11 +51,11 @@ const getFieldsToExtract = function(numberInString) {
   return [Number(numberInString)];
 };
 
-const performCutOperation = function(userArgs, reader) {
+const performCutOperation = function(userArgs, reader, print) {
   if (userArgs.fileNames) {
     userArgs.fileNames.forEach(fileName => {
       let content = getContent(fileName, reader);
-      performCut(content, userArgs);
+      performCut(content, userArgs, print);
     });
   }
 };

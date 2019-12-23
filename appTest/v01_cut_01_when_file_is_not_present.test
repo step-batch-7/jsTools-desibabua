@@ -1,0 +1,2 @@
+node cut.js -f 2 appTest/sample.t
+cut: appTest/sample.t: No such file or directory
