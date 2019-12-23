@@ -3,7 +3,9 @@ const {
   messageFormatter,
   getFields,
   getContent,
-  getSeparatedFields
+  getSeparatedFields,
+  getParsedArgs,
+  performCut
 } = require("../cut");
 
 describe("messageFormatter", function() {
@@ -66,7 +68,7 @@ describe("getFields", function() {
   });
 });
 
-describe("loadContentFromFile", function() {
+describe("getContent", function() {
   it("should loadContent from a file", function() {
     const reader = function(path, encoding) {
       assert.strictEqual("a.text", path);
@@ -87,7 +89,7 @@ describe("loadContentFromFile", function() {
       throw { message: "file is not present" };
     };
     const actualValue = getContent("a.text", reader);
-    const expectedValue = { error: "file is not present" };
+    const expectedValue = { error: ["file is not present"] };
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 });
@@ -114,8 +116,47 @@ describe("getSeparatedLines", function() {
     };
     let actualValue = getSeparatedFields(data);
     let expectedValue = {
-      content: [["hello,good morning"],["this is my book,but i have one"]]
+      content: [["hello,good morning"], ["this is my book,but i have one"]]
     };
     assert.deepStrictEqual(actualValue, expectedValue);
+  });
+});
+
+describe("getParsedArgs", function() {
+  it("should give parsed args with one file", function() {
+    let userArgs = ["-d", " ", "-f", "3", "a.text"];
+    let actualValue = getParsedArgs(userArgs);
+    let expectedValue = { separator: " ", fields: "3", fileNames: ["a.text"] };
+    assert.deepStrictEqual(actualValue, expectedValue);
+
+    userArgs = ["-f", "3", "-d", " ", "a.text"];
+    actualValue = getParsedArgs(userArgs);
+    expectedValue = { separator: " ", fields: "3", fileNames: ["a.text"] };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+
+  it("should give parsed args with two file", function() {
+    let userArgs = ["-d", " ", "-f", "3", "a.text","b.text"];
+    let actualValue = getParsedArgs(userArgs);
+    let expectedValue = { separator: " ", fields: "3", fileNames: ["a.text","b.text"] };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  })
+});
+
+describe('performCut',function() {
+  it('should performCut on given content with userArgs', function() {
+    const contentOfFile = {content:['hello where are you','I am here.']}
+    const userArgs = {separator:" ",fields : [3]}
+    let actualValue = performCut(contentOfFile,userArgs)
+    let expectedValue = 'are\nhere.'
+    assert.strictEqual(actualValue, expectedValue);
+  });
+
+  it('should not performCut on given error with userArgs', function() {
+    const contentOfFile = {error:"this is an error"}
+    const userArgs = {separator:" ",fields : [3]}
+    let actualValue = performCut(contentOfFile,userArgs)
+    let expectedValue = 'this is an error'
+    assert.strictEqual(actualValue, expectedValue);
   });
 });
