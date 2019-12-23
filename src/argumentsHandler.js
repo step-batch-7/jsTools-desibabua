@@ -13,9 +13,21 @@ const getParsedArgs = function(userArgs) {
   return parsedArgs;
 };
 
+const getRange = function(field){
+  field = field.split('-')
+  const firstNumber = Number(field[0])
+  const lastNumber = Number(field[field.length-1])
+  const range = []
+  for(let i= firstNumber ;i<= lastNumber;i++){
+    range.push(i)
+  }
+  return range
+}
+
 const getFieldsToExtract = function(numberInString, separator) {
   if (!separator) return [1];
-  return [Number(numberInString)];
+  fields = numberInString.split(',')
+  return fields.flatMap(field=>getRange(field))
 };
 
 module.exports = { getParsedArgs, getFieldsToExtract };

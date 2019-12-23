@@ -20,7 +20,7 @@ describe("getParsedArgs", function() {
   it("should give parsed args when -d is not there", function() {
     let userArgs = ["-f", "3", "a.text"];
     let actualValue = getParsedArgs(userArgs);
-    let expectedValue = {fields: "3", fileNames: ["a.text"] };
+    let expectedValue = { fields: "3", fileNames: ["a.text"] };
     assert.deepStrictEqual(actualValue, expectedValue);
 
     userArgs = ["-f", "3", "-d", " ", "a.text"];
@@ -41,16 +41,22 @@ describe("getParsedArgs", function() {
   });
 });
 
-describe('getFieldsToExtract',function() {
-    it('should give fields which have to extract when delimiter is not given', function() {
-        let actualValue = getFieldsToExtract("5")
-        let expectedValue = [1]
-        assert.deepStrictEqual(actualValue, expectedValue);
-    });
+describe("getFieldsToExtract", function() {
+  it("should give fields which have to extract when delimiter is not given", function() {
+    let actualValue = getFieldsToExtract("5");
+    let expectedValue = [1];
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
 
-    it('should give fields which have to extract when delimiter is given', function() {
-        let actualValue = getFieldsToExtract("5",",")
-        let expectedValue = [5]
-        assert.deepStrictEqual(actualValue, expectedValue);
-    });
+  it("should give fields which have to extract when delimiter is given", function() {
+    let actualValue = getFieldsToExtract("5", ",");
+    let expectedValue = [5];
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+
+  it('should give fields when "," is between fields', function() {
+    let actualValue = getFieldsToExtract("5,6,7,1", ",");
+    let expectedValue = [5, 6, 7, 1];
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
 });
