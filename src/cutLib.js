@@ -47,15 +47,17 @@ const performCut = function(contentOfFile, userArgs, print) {
   }
 };
 
-const getFieldsToExtract = function(numberInString) {
-  return [Number(numberInString)];
-};
-
 const performCutOperation = function(userArgs, reader, print) {
-  if (userArgs.fileNames) {
+  if (userArgs.fileNames !== []) {
     userArgs.fileNames.forEach(fileName => {
       let content = getContent(fileName, reader);
       performCut(content, userArgs, print);
+    });
+  } else {
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("data", line => {
+      data = { content: [line.trim()] };
+      performCut(data, userArgs, print);
     });
   }
 };
@@ -67,5 +69,5 @@ module.exports = {
   getSeparatedFields,
   performCut,
   performCutOperation,
-  getFieldsToExtract
+  getMessage
 };

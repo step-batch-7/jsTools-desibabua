@@ -13,4 +13,9 @@ const getParsedArgs = function(userArgs) {
   return parsedArgs;
 };
 
-module.exports = { getParsedArgs };
+const getFieldsToExtract = function(numberInString, separator) {
+  if (!separator) return [1];
+  return [Number(numberInString)];
+};
+
+module.exports = { getParsedArgs, getFieldsToExtract };

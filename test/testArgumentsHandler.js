@@ -1,11 +1,26 @@
 const assert = require("assert");
-const { getParsedArgs } = require("../src/argumentsHandler");
+const {
+  getParsedArgs,
+  getFieldsToExtract
+} = require("../src/argumentsHandler");
 
 describe("getParsedArgs", function() {
   it("should give parsed args with one file", function() {
     let userArgs = ["-d", " ", "-f", "3", "a.text"];
     let actualValue = getParsedArgs(userArgs);
     let expectedValue = { separator: " ", fields: "3", fileNames: ["a.text"] };
+    assert.deepStrictEqual(actualValue, expectedValue);
+
+    userArgs = ["-f", "3", "-d", " ", "a.text"];
+    actualValue = getParsedArgs(userArgs);
+    expectedValue = { separator: " ", fields: "3", fileNames: ["a.text"] };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+
+  it("should give parsed args when -d is not there", function() {
+    let userArgs = ["-f", "3", "a.text"];
+    let actualValue = getParsedArgs(userArgs);
+    let expectedValue = {fields: "3", fileNames: ["a.text"] };
     assert.deepStrictEqual(actualValue, expectedValue);
 
     userArgs = ["-f", "3", "-d", " ", "a.text"];
@@ -24,4 +39,18 @@ describe("getParsedArgs", function() {
     };
     assert.deepStrictEqual(actualValue, expectedValue);
   });
+});
+
+describe('getFieldsToExtract',function() {
+    it('should give fields which have to extract when delimiter is not given', function() {
+        let actualValue = getFieldsToExtract("5")
+        let expectedValue = [1]
+        assert.deepStrictEqual(actualValue, expectedValue);
+    });
+
+    it('should give fields which have to extract when delimiter is given', function() {
+        let actualValue = getFieldsToExtract("5",",")
+        let expectedValue = [5]
+        assert.deepStrictEqual(actualValue, expectedValue);
+    });
 });

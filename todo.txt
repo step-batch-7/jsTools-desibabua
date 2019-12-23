@@ -15,8 +15,8 @@
     - write app test
     - give output
     - get fields 
-    * select path from where input should be taken and load contents
-    * check fields to extract
-    * parse arguments
+    - select path from where input should be taken and load contents
+    - check fields to extract
+    - parse arguments
 
 a

@@ -4,7 +4,8 @@ const {
   getFields,
   getContent,
   getSeparatedFields,
-  performCut
+  performCut,
+  getMessage
 } = require("../src/cutLib");
 
 describe("messageFormatter", function() {
@@ -165,7 +166,17 @@ describe("performCut", function() {
     };
     const print = { error };
 
-    let actualValue = performCut(contentOfFile, userArgs,print);
+    let actualValue = performCut(contentOfFile, userArgs, print);
     assert.isOk(actualValue);
+  });
+});
+
+describe("getMessage", function() {
+  it("should give message", function() {
+    let data = {
+      content: [["hello", "my"], ["this is", "my book"], [""]]
+    };
+    let actualValue = getMessage(data, ",");
+    assert.strictEqual(actualValue, "hello,my\nthis is,my book");
   });
 });
