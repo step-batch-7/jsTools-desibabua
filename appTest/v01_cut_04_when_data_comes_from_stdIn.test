@@ -1,0 +1,5 @@
+cat appTest/sample.txt | node cut.js -d ' ' -f 1
+there
+is
+this
+this

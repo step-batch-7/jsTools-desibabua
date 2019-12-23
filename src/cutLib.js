@@ -48,7 +48,7 @@ const performCut = function(contentOfFile, userArgs, print) {
 };
 
 const performCutOperation = function(userArgs, reader, print) {
-  if (userArgs.fileNames !== []) {
+  if (userArgs.fileNames.length !== 0) {
     userArgs.fileNames.forEach(fileName => {
       let content = getContent(fileName, reader);
       performCut(content, userArgs, print);
@@ -56,7 +56,7 @@ const performCutOperation = function(userArgs, reader, print) {
   } else {
     process.stdin.setEncoding("utf8");
     process.stdin.on("data", line => {
-      data = { content: [line.trim()] };
+      data = { content: line.split('\n') };
       performCut(data, userArgs, print);
     });
   }
