@@ -1,8 +1,8 @@
-"use strict"
+"use strict";
 
 const getMessage = function(data, separator) {
   let message = data.content.map(line => line.join(separator));
-  if (message[message.length - 1] == "") {
+  if (message.slice(-1) == "") {
     message.splice(message.length - 1);
   }
   return message.join("\n");
@@ -50,18 +50,9 @@ const performCut = function(contentOfFile, userArgs, print) {
 };
 
 const performCutOperation = function(userArgs, reader, print) {
-  if (userArgs.fileNames.length !== 0) {
-    userArgs.fileNames.forEach(fileName => {
-      let content = getContent(fileName, reader);
-      performCut(content, userArgs, print);
-    });
-  } else {
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("data", line => {
-      const data = { content: line.split('\n') };
-      performCut(data, userArgs, print);
-    });
-  }
+  const [fileName] = userArgs.fileNames;
+  let content = getContent(fileName, reader);
+  performCut(content, userArgs, print);
 };
 
 module.exports = {
