@@ -7,7 +7,10 @@ const getParsedArgs = function(userArgs) {
     fileNames = userArgs.slice(4);
     separator = userArgs[userArgs.indexOf("-d") + 1];
   }
+  
   let fields = userArgs[userArgs.indexOf("-f") + 1];
+  fields = getFieldsToExtract(fields, separator);
+
   return { separator, fields, fileNames };
 };
 
