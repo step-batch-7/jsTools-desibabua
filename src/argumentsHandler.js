@@ -11,21 +11,18 @@ const getParsedArgs = function(userArgs) {
   return { separator, fields, fileNames };
 };
 
-const getRange = function(field) {
-  field = field.split("-");
-  const firstNumber = +field[0];
-  const lastNumber = +field[field.length - 1];
-  const range = [];
-  for (let i = firstNumber; i <= lastNumber; i++) {
-    range.push(i);
+const getRange = function(field, range = []) {
+  const [firstNumber, lastNumber] = [+field.slice(0, 1), +field.slice(-1)];
+  for (let number = firstNumber; number <= lastNumber; number++) {
+    range.push(number);
   }
   return range;
 };
 
 const getFieldsToExtract = function(numberInString, separator) {
-  if (separator==="\t") return [1];
+  if (separator === "\t") return [1];
   const fields = numberInString.split(",");
-  return fields.flatMap(field => getRange(field));
+  return fields.flatMap(field => getRange(field.split("-")));
 };
 
 module.exports = { getParsedArgs, getFieldsToExtract };
