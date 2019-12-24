@@ -1,5 +1,0 @@
-node cut.js -d ' ' -f 1-3 appTest/sample.txt
-there is nothing
-is for testing
-this , line
-this file is
