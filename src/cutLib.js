@@ -1,3 +1,5 @@
+"use strict"
+
 const getMessage = function(data, separator) {
   let message = data.content.map(line => line.join(separator));
   if (message[message.length - 1] == "") {
@@ -56,7 +58,7 @@ const performCutOperation = function(userArgs, reader, print) {
   } else {
     process.stdin.setEncoding("utf8");
     process.stdin.on("data", line => {
-      data = { content: line.split('\n') };
+      const data = { content: line.split('\n') };
       performCut(data, userArgs, print);
     });
   }
