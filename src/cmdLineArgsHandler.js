@@ -5,27 +5,15 @@ const getParsedArgs = function(userArgs) {
   let fileNames = userArgs.slice(2);
   if (userArgs.includes("-d")) {
     fileNames = userArgs.slice(4);
-    separator = userArgs[userArgs.indexOf("-d") + 1];
+    separator = getOptionValue(userArgs, "-d");
   }
-  
-  let fields = userArgs[userArgs.indexOf("-f") + 1];
-  fields = getFieldsToExtract(fields, separator);
 
+  let fields = [+getOptionValue(userArgs, "-f")];
   return { separator, fields, fileNames };
 };
 
-const getRange = function(field, range = []) {
-  const [firstNumber, lastNumber] = [+field.slice(0, 1), +field.slice(-1)];
-  for (let number = firstNumber; number <= lastNumber; number++) {
-    range.push(number);
-  }
-  return range;
+const getOptionValue = function(userArgs, option) {
+  return userArgs[userArgs.indexOf(option) + 1];
 };
 
-const getFieldsToExtract = function(numberInString, separator) {
-  if (separator === "\t") return [1];
-  const fields = numberInString.split(",");
-  return fields.flatMap(field => getRange(field.split("-")));
-};
-
-module.exports = { getParsedArgs, getFieldsToExtract };
+module.exports = { getParsedArgs };
