@@ -92,7 +92,14 @@ describe("getContent", function() {
       assert.strictEqual("utf8", encoding);
       return "this is a line of the file\nbut not in file";
     };
-    const actualValue = getContent("a.text", reader);
+
+    const isExist = function(fileName) {
+      assert.strictEqual(fileName, "a.text");
+      return true;
+    };
+
+    const fsTools = { reader, isExist };
+    const actualValue = getContent("a.text", fsTools);
     const expectedValue = {
       content: ["this is a line of the file", "but not in file"]
     };
@@ -103,11 +110,18 @@ describe("getContent", function() {
     const reader = function(path, encoding) {
       assert.strictEqual("a.text", path);
       assert.strictEqual("utf8", encoding);
-      throw { message: `cut: ${path}: No such file or directory` };
     };
-    const actualValue = getContent("a.text", reader);
+
+    const isExist = function(fileName) {
+      assert.strictEqual(fileName, "bad.text");
+      return false;
+    };
+
+    const fsTools = { reader, isExist };
+
+    const actualValue = getContent("bad.text", fsTools);
     const expectedValue = {
-      error: `cut: ${"a.text"}: No such file or directory`
+      error: `cut: ${"bad.text"}: No such file or directory`
     };
     assert.deepStrictEqual(actualValue, expectedValue);
   });

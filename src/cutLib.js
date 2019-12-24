@@ -20,14 +20,12 @@ const getFields = function(data, fields) {
   return { content: returnMessage };
 };
 
-const getContent = function(fileName, reader) {
-  try {
-    let content = reader(fileName, "utf8");
-    content = content.split("\n");
-    return { content };
-  } catch (err) {
+const getContent = function(fileName, fsTools) {
+  if (!fsTools.isExist(fileName))
     return { error: `cut: ${fileName}: No such file or directory` };
-  }
+  let content = fsTools.reader(fileName, "utf8");
+  content = content.split("\n");
+  return { content };
 };
 
 const getSeparatedFields = function(data, separator) {
@@ -47,9 +45,9 @@ const performCut = function(contentOfFile, userArgs, print) {
   }
 };
 
-const cut = function(userArgs, reader, print) {
+const cut = function(userArgs, fsTools, print) {
   const [fileName] = userArgs.fileNames;
-  let content = getContent(fileName, reader);
+  let content = getContent(fileName, fsTools);
   performCut(content, userArgs, print);
 };
 
