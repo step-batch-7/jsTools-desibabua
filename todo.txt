@@ -3,7 +3,6 @@
 * Input Types Handled ==>
 
     1. node cut.js -f 1 sample1.txt
-    2. node cut.js -d ' ' -f 1
     
 * Files Required ==>
 

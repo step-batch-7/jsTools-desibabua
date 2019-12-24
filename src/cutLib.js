@@ -2,9 +2,7 @@
 
 const getMessage = function(data, separator) {
   let message = data.content.map(line => line.join(separator));
-  if (message.slice(-1) == "") {
-    message.splice(message.length - 1);
-  }
+  if (message.slice(-1) == "") return message.slice(0, -1).join("\n");
   return message.join("\n");
 };
 
@@ -49,7 +47,7 @@ const performCut = function(contentOfFile, userArgs, print) {
   }
 };
 
-const performCutOperation = function(userArgs, reader, print) {
+const cut = function(userArgs, reader, print) {
   const [fileName] = userArgs.fileNames;
   let content = getContent(fileName, reader);
   performCut(content, userArgs, print);
@@ -61,6 +59,6 @@ module.exports = {
   getContent,
   getSeparatedFields,
   performCut,
-  performCutOperation,
+  cut,
   getMessage
 };
