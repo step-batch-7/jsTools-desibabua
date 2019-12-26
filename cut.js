@@ -5,13 +5,13 @@ const { getParsedArgs } = require("./src/cmdLineArgsHandler");
 const { cut } = require("./src/cutLib");
 const { displayMessage } = require("./src/messageOperations");
 
-const main = function(userArgs) {
+const main = function() {
   const print = { content: console.log, error: console.error };
   const fsTools = { reader: fs.readFileSync, isExist: fs.existsSync };
-  
-  userArgs = getParsedArgs(userArgs.slice(2));
-  const msgToDisplay = cut(userArgs, fsTools, print);
+
+  const userArgs = getParsedArgs(process.argv.slice(2));
+  const msgToDisplay = cut(userArgs, fsTools);
   displayMessage(msgToDisplay, print);
 };
 
-main(process.argv);
+main();

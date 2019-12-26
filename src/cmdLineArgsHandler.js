@@ -1,19 +1,19 @@
 "use strict";
 
 const getParsedArgs = function(userArgs) {
-  let separator = "\t";
-  let fileNames = userArgs.slice(2);
-  if (userArgs.includes("-d")) {
-    fileNames = userArgs.slice(4);
-    separator = getOptionValue(userArgs, "-d");
-  }
-
-  let fields = [+getOptionValue(userArgs, "-f")];
+  const separator = getSeparator(userArgs);
+  const fields = [+getField(userArgs)];
+  const fileNames = userArgs.slice(-1);
   return { separator, fields, fileNames };
 };
 
-const getOptionValue = function(userArgs, option) {
-  return userArgs[userArgs.indexOf(option) + 1];
+const getSeparator = function(userArgs) {
+  if (!userArgs.includes("-d")) return "\t";
+  return userArgs[userArgs.indexOf("-d") + 1];
+};
+
+const getField = function(userArgs) {
+  return userArgs[userArgs.indexOf("-f") + 1];
 };
 
 module.exports = { getParsedArgs };
