@@ -1,4 +1,5 @@
 "use strict";
+const { getSeparatedFields, getFields } = require("./fieldOperation");
 
 const getMessage = function(data, separator) {
   let message = data.content.map(line => line.join(separator));
@@ -7,17 +8,8 @@ const getMessage = function(data, separator) {
 };
 
 const messageFormatter = function(data, print, separator) {
-  if (data.error) {
-    return print.error(data.error);
-  }
+  if (data.error) return print.error(data.error);
   return print.content(getMessage(data, separator));
-};
-
-const getFields = function(data, fields) {
-  let returnMessage = data.content.map(list =>
-    list.filter((word, index) => fields.includes(index + 1))
-  );
-  return { content: returnMessage };
 };
 
 const getContent = function(fileName, fsTools) {
@@ -28,20 +20,13 @@ const getContent = function(fileName, fsTools) {
   return { content };
 };
 
-const getSeparatedFields = function(data, separator) {
-  return { content: data.content.map(line => line.split(separator)) };
-};
-
-const performCut = function(contentOfFile, userArgs, print) {
-  if (contentOfFile.content) {
-    const separatedFields = getSeparatedFields(
-      contentOfFile,
-      userArgs.separator
-    );
+const performCut = function(fileContent, userArgs, print) {
+  if (fileContent.content) {
+    const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
     const fields = getFields(separatedFields, userArgs.fields);
     return messageFormatter(fields, print, userArgs.separator);
   } else {
-    return messageFormatter(contentOfFile, print, userArgs);
+    return messageFormatter(fileContent, print, userArgs);
   }
 };
 
@@ -53,9 +38,7 @@ const cut = function(userArgs, fsTools, print) {
 
 module.exports = {
   messageFormatter,
-  getFields,
   getContent,
-  getSeparatedFields,
   performCut,
   cut,
   getMessage
