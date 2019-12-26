@@ -11,12 +11,24 @@ describe("cut", function() {
 
     const reader = function(fileName) {
       assert.equal(fileName, "a.text");
-      return "hello\ni am here" 
+      return "hello\ni am here";
     };
 
     const fsTools = { reader, isExist };
     let actualValue = cut(userArgs, fsTools);
     let expectedValue = { content: "hello\ni" };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+
+  it("should not cut anything and give error when field is not present", function() {
+    const errorMsg = {
+      error: `usage: cut -b list [-n] [file ...]
+    cut -c list [file ...]
+    cut -f list [-s] [-d delim] [file ...]`
+    };
+    let userArgs = { separator: "\t", fields: errorMsg };
+    let actualValue = cut(userArgs)
+    let expectedValue = errorMsg;
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 });

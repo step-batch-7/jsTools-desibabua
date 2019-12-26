@@ -1,6 +1,6 @@
 "use strict";
 const { getSeparatedFields, getFields } = require("./fieldOperation");
-const { getMessage } = require("./messageOperations");
+const { getReducedLines } = require("./messageOperations");
 
 const getContent = function(fileName, fsTools) {
   if (!fsTools.isExist(fileName))
@@ -14,13 +14,13 @@ const performCut = function(fileContent, userArgs) {
   if (fileContent.content) {
     const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
     const fields = getFields(separatedFields, userArgs.fields);
-    return getMessage(fields, userArgs.separator);
-  } else {
-    return getMessage(fileContent, userArgs.separator);
+    return getReducedLines(fields, userArgs.separator);
   }
+  return getReducedLines(fileContent);
 };
 
 const cut = function(userArgs, fsTools) {
+  if(userArgs.fields.error) return performCut(userArgs.fields)
   const [fileName] = userArgs.fileNames;
   let content = getContent(fileName, fsTools);
   return performCut(content, userArgs);
