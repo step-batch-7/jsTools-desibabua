@@ -12,7 +12,7 @@ const getContent = function(fileName, reader) {
 const performCut = function(fileContent, userArgs, display) {
   const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
   const fields = getFields(separatedFields, userArgs.fields);
-  return getReducedLines(fields, userArgs.separator);
+  return getReducedLines(fields.content, userArgs.separator);
 };
 
 const cut = function(userArgs, fsTools, display) {
