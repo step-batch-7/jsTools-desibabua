@@ -1,5 +1,25 @@
 const assert = require("chai").assert;
-const { getContent, performCut } = require("../src/cutLib");
+const { cut, getContent, performCut } = require("../src/cutLib");
+
+describe("cut", function() {
+  it("should cut according to userArgs", function() {
+    const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
+    const isExist = function(fileName) {
+      assert.equal(fileName, "a.text");
+      return true;
+    };
+
+    const reader = function(fileName) {
+      assert.equal(fileName, "a.text");
+      return "hello\ni am here" 
+    };
+
+    const fsTools = { reader, isExist };
+    let actualValue = cut(userArgs, fsTools);
+    let expectedValue = { content: "hello\ni" };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
+});
 
 describe("getContent", function() {
   it("should loadContent from a file", function() {

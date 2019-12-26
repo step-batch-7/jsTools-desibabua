@@ -10,7 +10,7 @@ const getContent = function(fileName, fsTools) {
   return { content };
 };
 
-const performCut = function(fileContent, userArgs, print) {
+const performCut = function(fileContent, userArgs) {
   if (fileContent.content) {
     const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
     const fields = getFields(separatedFields, userArgs.fields);
@@ -20,7 +20,7 @@ const performCut = function(fileContent, userArgs, print) {
   }
 };
 
-const cut = function(userArgs, fsTools, print) {
+const cut = function(userArgs, fsTools) {
   const [fileName] = userArgs.fileNames;
   let content = getContent(fileName, fsTools);
   return performCut(content, userArgs);

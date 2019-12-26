@@ -8,6 +8,7 @@ const { displayMessage } = require("./src/messageOperations");
 const main = function(userArgs) {
   const print = { content: console.log, error: console.error };
   const fsTools = { reader: fs.readFileSync, isExist: fs.existsSync };
+  
   userArgs = getParsedArgs(userArgs.slice(2));
   const msgToDisplay = cut(userArgs, fsTools, print);
   displayMessage(msgToDisplay, print);
