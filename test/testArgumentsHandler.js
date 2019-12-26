@@ -27,14 +27,9 @@ describe("getParsedArgs", function() {
   it("should give error when field is not present", function() {
     let userArgs = ["a.text"];
     let actualValue = getParsedArgs(userArgs);
-    const errorMsg = {
-      error: `usage: cut -b list [-n] [file ...]
-    cut -c list [file ...]
-    cut -f list [-s] [-d delim] [file ...]`
-    };
     let expectedValue = {
       separator: "\t",
-      fields: errorMsg,
+      fields: undefined,
       fileNames: ["a.text"]
     };
     assert.deepStrictEqual(actualValue, expectedValue);

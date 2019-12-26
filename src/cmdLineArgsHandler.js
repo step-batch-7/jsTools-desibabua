@@ -1,30 +1,37 @@
 "use strict";
 
+const isPresent = function(option) {
+  return this.includes(option);
+};
+
+const optionValue = function(option) {
+  return this[this.indexOf(option) + 1];
+};
+
 const getParsedArgs = function(userArgs) {
-  const separator = getSeparator(userArgs);
-  const fields = getField(userArgs);
+  const isOptionPresent = isPresent.bind(userArgs);
+  const getOptionValue = optionValue.bind(userArgs);
+
+  const separator = isOptionPresent("-d") ? getOptionValue("-d") : "\t";
+  const fields = isOptionPresent("-f") ? [+getOptionValue("-f")] : undefined;
   const fileNames = userArgs.slice(-1);
   return { separator, fields, fileNames };
 };
 
-const getSeparator = function(userArgs) {
-  const indexOfSeparator = getIndexOf(userArgs, "-d");
-  if (indexOfSeparator == -1) return "\t";
-  return userArgs[indexOfSeparator + 1];
+const getErrorType = function(fileName) {
+  const missingFile = `cut: ${fileName}: No such file or directory`;
+  const usage = `usage: cut -b list [-n] [file ...]
+  cut -c list [file ...]
+  cut -f list [-s] [-d delim] [file ...]`;
+  return { missingFile, usage };
 };
 
-const getField = function(userArgs) {
-  const indexOfField = getIndexOf(userArgs, "-f");
-  if (indexOfField != -1) return [+userArgs[indexOfField + 1]];
-  return {
-    error: `usage: cut -b list [-n] [file ...]
-    cut -c list [file ...]
-    cut -f list [-s] [-d delim] [file ...]`
-  };
+const isValidArgs = function(userArgs, isExist) {
+  const errors = getErrorType(userArgs.fileNames);
+  if (userArgs.fields == undefined) return { error: errors.usage };
+  if (userArgs.fileNames[0] && !isExist(userArgs.fileNames[0]))
+    return { error: errors.missingFile };
+  return {};
 };
 
-const getIndexOf = function(userArgs, option) {
-  return userArgs.indexOf(option);
-};
-
-module.exports = { getParsedArgs };
+module.exports = { getParsedArgs, isValidArgs };

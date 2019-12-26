@@ -5,13 +5,8 @@ const getReducedLines = function(data, separator) {
   return { content: message.join("\n") };
 };
 
-const displayReducedLines = function(reducedLines, print) {
-  reducedLines.error && print.error(reducedLines.error);
-  reducedLines.content && print.content(reducedLines.content);
-};
-
 const isLastLineEmpty = function(message) {
   return message.slice(-1) == "";
 };
 
-module.exports = { displayReducedLines, getReducedLines };
+module.exports = { getReducedLines };

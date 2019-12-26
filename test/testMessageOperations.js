@@ -1,30 +1,6 @@
 const assert = require("chai").assert;
 const { displayReducedLines, getReducedLines } = require("../src/messageOperations");
 
-describe("displayReducedLines", function() {
-  it("should display message when content is there", function() {
-    const content = function(data) {
-      assert.equal(data, "hello");
-    };
-
-    const print = { content };
-
-    let msgToDisplay = { content: "hello" };
-    displayReducedLines(msgToDisplay, print);
-  });
-
-  it("should display message when error is there", function() {
-    const error = function(data) {
-      assert.equal(data, "wrongMessage");
-    };
-
-    const print = { error };
-
-    let msgToDisplay = { error: "wrongMessage" };
-    displayReducedLines(msgToDisplay, print);
-  });
-});
-
 describe("getReducedLines", function() {
   it("should give message when last line is empty", function() {
     let data = {

@@ -2,6 +2,11 @@ const assert = require("chai").assert;
 const { cut, getContent, performCut } = require("../src/cutLib");
 
 describe("cut", function() {
+  
+  const usageError = `usage: cut -b list [-n] [file ...]
+  cut -c list [file ...]
+  cut -f list [-s] [-d delim] [file ...]`;
+
   it("should cut according to userArgs", function() {
     const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
     const isExist = function(fileName) {
@@ -14,22 +19,50 @@ describe("cut", function() {
       return "hello\ni am here";
     };
 
+    const display = function(output) {
+      assert.deepStrictEqual(output, { content: "hello\ni" });
+      return;
+    };
     const fsTools = { reader, isExist };
-    let actualValue = cut(userArgs, fsTools);
-    let expectedValue = { content: "hello\ni" };
-    assert.deepStrictEqual(actualValue, expectedValue);
+    cut(userArgs, fsTools, display);
   });
 
-  it("should not cut anything and give error when field is not present", function() {
-    const errorMsg = {
-      error: `usage: cut -b list [-n] [file ...]
-    cut -c list [file ...]
-    cut -f list [-s] [-d delim] [file ...]`
+  it("should give error when file is missing", function() {
+    const userArgs = { separator: " ", fileNames: ["a.text"] };
+    const isExist = function(fileName) {
+      assert.equal(fileName, "a.text");
+      return false;
     };
-    let userArgs = { separator: "\t", fields: errorMsg };
-    let actualValue = cut(userArgs)
-    let expectedValue = errorMsg;
-    assert.deepStrictEqual(actualValue, expectedValue);
+
+    const reader = function() {};
+
+    const display = function(output) {
+      assert.deepStrictEqual(output, {
+        error: usageError
+      });
+      return;
+    };
+    const fsTools = { reader, isExist };
+    cut(userArgs, fsTools, display);
+  });
+
+  it("should give error when field is missing", function() {
+    const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
+    const isExist = function(fileName) {
+      assert.equal(fileName, "a.text");
+      return false;
+    };
+
+    const reader = function() {};
+
+    const display = function(output) {
+      assert.deepStrictEqual(output, {
+        error: "cut: a.text: No such file or directory"
+      });
+      return;
+    };
+    const fsTools = { reader, isExist };
+    cut(userArgs, fsTools, display);
   });
 });
 
@@ -41,35 +74,9 @@ describe("getContent", function() {
       return "this is a line of the file\nbut not in file";
     };
 
-    const isExist = function(fileName) {
-      assert.strictEqual(fileName, "a.text");
-      return true;
-    };
-
-    const fsTools = { reader, isExist };
-    const actualValue = getContent("a.text", fsTools);
+    const actualValue = getContent("a.text", reader);
     const expectedValue = {
       content: ["this is a line of the file", "but not in file"]
-    };
-    assert.deepStrictEqual(actualValue, expectedValue);
-  });
-
-  it("should give error when file is not present", function() {
-    const reader = function(path, encoding) {
-      assert.strictEqual("a.text", path);
-      assert.strictEqual("utf8", encoding);
-    };
-
-    const isExist = function(fileName) {
-      assert.strictEqual(fileName, "bad.text");
-      return false;
-    };
-
-    const fsTools = { reader, isExist };
-
-    const actualValue = getContent("bad.text", fsTools);
-    const expectedValue = {
-      error: `cut: ${"bad.text"}: No such file or directory`
     };
     assert.deepStrictEqual(actualValue, expectedValue);
   });
@@ -85,20 +92,6 @@ describe("performCut", function() {
       return true;
     };
     const print = { content };
-
-    let actualValue = performCut(contentOfFile, userArgs, print);
-    assert.isOk(actualValue);
-  });
-
-  it("should not performCut on given error with userArgs", function() {
-    const contentOfFile = { error: "this is an error" };
-    const userArgs = { separator: " ", fields: [3] };
-
-    const error = function(data) {
-      assert.equal(data, "this is an error");
-      return true;
-    };
-    const print = { error };
 
     let actualValue = performCut(contentOfFile, userArgs, print);
     assert.isOk(actualValue);
