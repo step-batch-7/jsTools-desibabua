@@ -27,6 +27,19 @@ describe("getFields", function() {
     let expectedValue = { content: [["name"], [undefined]] };
     assert.deepStrictEqual(actualValue, expectedValue);
   });
+
+  it("should get the desired fields of given content when field has only one length available", function() {
+    let data = {
+      content: [
+        ["hello my name"],
+        ["this is", "my book"]
+      ]
+    };
+    let fields = [3];
+    let actualValue = getFields(data, fields);
+    let expectedValue = { content: [["hello my name"], [undefined]] };
+    assert.deepStrictEqual(actualValue, expectedValue);
+  });
 });
 
 describe("getSeparatedLines", function() {

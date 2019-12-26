@@ -1,12 +1,22 @@
 const assert = require("chai").assert;
 const {
-  messageFormatter,
+  displayMessage,
   getContent,
   performCut,
   getMessage
 } = require("../src/cutLib");
 
-describe("messageFormatter", function() {
+describe("getMessage", function() {
+  it("should give message when last line is empty", function() {
+    let data = {
+      content: [["hello", "my"], ["this is", "my book"], [""]]
+    };
+    let actualValue = getMessage(data, ",");
+    assert.deepStrictEqual(actualValue, {
+      content: "hello,my\nthis is,my book"
+    });
+  });
+
   it("should formate the message in right manner if content is there and separator is given", function() {
     const data = {
       content: [
@@ -15,43 +25,30 @@ describe("messageFormatter", function() {
       ]
     };
 
-    const content = function(data) {
-      assert.equal(data, "hello,my\nthis is,my book");
-      return true;
-    };
-    const print = { content };
-
     const separator = ",";
-    let actualValue = messageFormatter(data, print, separator);
-    assert.isOk(actualValue);
+    let actualValue = getMessage(data, separator);
+    assert.deepStrictEqual(actualValue, {
+      content: "hello,my\nthis is,my book"
+    });
   });
 
   it("should formate the message in right manner if error is there and separator is given", function() {
     const data = { error: "cut: [-cf] list: illegal list value" };
-
-    const error = function(data) {
-      assert.equal(data, "cut: [-cf] list: illegal list value");
-      return true;
-    };
-    const print = { error };
-
     const separator = ",";
-    let actualValue = messageFormatter(data, print, separator);
-    assert.isOk(actualValue);
+    let actualValue = getMessage(data, separator);
+    assert.deepStrictEqual(actualValue, {
+      error: "cut: [-cf] list: illegal list value"
+    });
   });
 
   it("should formate the message in right manner if content is there and separator is not given", function() {
     const data = {
       content: [["hello my"], ["this is my book"]]
     };
-    const content = function(data) {
-      assert.equal(data, "hello my\nthis is my book");
-      return true;
-    };
-    const print = { content };
-
-    let actualValue = messageFormatter(data, print);
-    assert.isOk(actualValue);
+    let actualValue = getMessage(data);
+    assert.deepStrictEqual(actualValue, {
+      content: "hello my\nthis is my book"
+    });
   });
 });
 
@@ -127,12 +124,28 @@ describe("performCut", function() {
   });
 });
 
-describe("getMessage", function() {
-  it("should give message", function() {
-    let data = {
-      content: [["hello", "my"], ["this is", "my book"], [""]]
+describe("displayMessage", function() {
+  it("should display message when content is there", function() {
+    
+    const content = function(data) {
+      assert.equal(data, "hello");
     };
-    let actualValue = getMessage(data, ",");
-    assert.strictEqual(actualValue, "hello,my\nthis is,my book");
+
+    const print = { content };
+
+    let msgToDisplay = { content: "hello" };
+    displayMessage(msgToDisplay, print);
+  });
+
+  it("should display message when error is there", function() {
+
+    const error = function(data) {
+      assert.equal(data, "wrongMessage");
+    };
+
+    const print = { error };
+
+    let msgToDisplay = { error: "wrongMessage" };
+    displayMessage(msgToDisplay, print);
   });
 });

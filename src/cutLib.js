@@ -2,14 +2,15 @@
 const { getSeparatedFields, getFields } = require("./fieldOperation");
 
 const getMessage = function(data, separator) {
+  if (data.error) return data;
   let message = data.content.map(line => line.join(separator));
-  if (message.slice(-1) == "") return message.slice(0, -1).join("\n");
-  return message.join("\n");
+  if (message.slice(-1) == "") message = message.slice(0, -1);
+  return { content: message.join("\n") };
 };
 
-const messageFormatter = function(data, print, separator) {
-  if (data.error) return print.error(data.error);
-  return print.content(getMessage(data, separator));
+const displayMessage = function(msgToDisplay, print) {
+  msgToDisplay.error && print.error(msgToDisplay.error);
+  msgToDisplay.content && print.content(msgToDisplay.content);
 };
 
 const getContent = function(fileName, fsTools) {
@@ -24,20 +25,21 @@ const performCut = function(fileContent, userArgs, print) {
   if (fileContent.content) {
     const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
     const fields = getFields(separatedFields, userArgs.fields);
-    return messageFormatter(fields, print, userArgs.separator);
+    return getMessage(fields, userArgs.separator);
   } else {
-    return messageFormatter(fileContent, print, userArgs);
+    return getMessage(fileContent, userArgs.separator);
   }
 };
 
 const cut = function(userArgs, fsTools, print) {
   const [fileName] = userArgs.fileNames;
   let content = getContent(fileName, fsTools);
-  performCut(content, userArgs, print);
+  const msgToDisplay = performCut(content, userArgs);
+  displayMessage(msgToDisplay, print);
 };
 
 module.exports = {
-  messageFormatter,
+  displayMessage,
   getContent,
   performCut,
   cut,

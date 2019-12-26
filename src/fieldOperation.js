@@ -1,6 +1,6 @@
 const getFields = function(data, fields) {
   let returnMessage = data.content.map(line => {
-    if (line.length == 0) return [line[0]];
+    if (line.length == 1) return [line[0]];
     return [line[fields - 1]];
   });
   return { content: returnMessage };
