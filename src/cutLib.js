@@ -1,33 +1,23 @@
-"use strict";
-const { getSeparatedFields, getFields } = require("./fieldOperation");
-const { isValidArgs } = require("./cmdLineArgsHandler");
-const { getReducedLines } = require("./messageOperations");
-
-const getContent = function(fileName, reader) {
-  let content = reader(fileName, "utf8");
-  return content.split("\n");
+const getFields = function(lists, fields) {
+  let returnMessage = lists.map(line => {
+    if (line.length == 1) return [line[0]];
+    return [line[fields - 1]];
+  });
+  return returnMessage;
 };
 
-const performCut = function(fileContent, userArgs) {
-  const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
-  const content = getFields(separatedFields, userArgs.fields);
-  return getReducedLines(content, userArgs.separator);
+const getSeparatedFields = function(lists, separator) {
+  return lists.map(line => line.split(separator));
 };
 
-const cut = function(userArgs, reader, doesExist, display) {
-  const isError = isValidArgs(userArgs, doesExist);
-  if (isError.error) {
-    display(isError);
-    return;
-  }
-  const [fileName] = userArgs.fileNames;
-  let content = getContent(fileName, reader);
-  display(performCut(content, userArgs, display));
-  return;
+const getReducedLines = function(content, separator) {
+  let lines = content.map(line => line.join(separator));
+  if (isLastLineEmpty(lines)) lines = lines.slice(0, -1);
+  return lines.join("\n");
 };
 
-module.exports = {
-  getContent,
-  performCut,
-  cut
+const isLastLineEmpty = function(message) {
+  return message.slice(-1) == "";
 };
+
+module.exports = { getFields, getSeparatedFields, getReducedLines };

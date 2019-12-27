@@ -1,5 +1,9 @@
 const assert = require("chai").assert;
-const { getFields, getSeparatedFields } = require("../src/fieldOperation");
+const {
+  getFields,
+  getSeparatedFields,
+  getReducedLines
+} = require("../src/cutLib");
 
 describe("getFields", function() {
   it("should get the desired fields of given content when field is available", function() {
@@ -53,5 +57,31 @@ describe("getSeparatedLines", function() {
       ["this is my book,but i have one"]
     ];
     assert.deepStrictEqual(actualValue, expectedValue);
+  });
+});
+
+describe("getReducedLines", function() {
+  it("should give message when last line is empty", function() {
+    const content = [["hello", "my"], ["this is", "my book"], [""]];
+
+    let actualValue = getReducedLines(content, ",");
+    assert.deepStrictEqual(actualValue, "hello,my\nthis is,my book");
+  });
+
+  it("should formate the message in right manner if content is there and separator is given", function() {
+    const content = [
+      ["hello", "my"],
+      ["this is", "my book"]
+    ];
+
+    const separator = ",";
+    let actualValue = getReducedLines(content, separator);
+    assert.deepStrictEqual(actualValue, "hello,my\nthis is,my book");
+  });
+
+  it("should formate the message in right manner if content is there and separator is not given", function() {
+    const content = [["hello my"], ["this is my book"]];
+    let actualValue = getReducedLines(content);
+    assert.deepStrictEqual(actualValue, "hello my\nthis is my book");
   });
 });

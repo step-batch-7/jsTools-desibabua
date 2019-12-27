@@ -1,5 +1,5 @@
 const assert = require("chai").assert;
-const { cut, getContent, performCut } = require("../src/cutLib");
+const { cut, getContent, performCut } = require("../src/cutOperation");
 
 describe("cut", function() {
   const usageError = `usage: cut -b list [-n] [file ...]\n       cut -c list [file ...]\n       cut -f list [-s] [-d delim] [file ...]`;
