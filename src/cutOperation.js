@@ -1,6 +1,6 @@
 "use strict";
 const { getSeparatedFields, getFields ,getReducedLines} = require("./cutLib");
-const { isValidArgs } = require("./cmdLineArgsHandler");
+const { getErrorInArgs } = require("./cmdLineArgsHandler");
 
 const getContent = function(fileName, reader) {
   let content = reader(fileName, "utf8");
@@ -14,9 +14,9 @@ const performCut = function(fileContent, userArgs) {
 };
 
 const cut = function(userArgs, reader, doesExist, display) {
-  const isError = isValidArgs(userArgs, doesExist);
-  if (isError.error) {
-    display(isError);
+  const doesContainError = getErrorInArgs(userArgs, doesExist);
+  if (doesContainError.error) {
+    display(doesContainError);
     return;
   }
   const [fileName] = userArgs.fileNames;

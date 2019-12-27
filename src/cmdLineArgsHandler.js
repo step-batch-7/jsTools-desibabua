@@ -24,7 +24,7 @@ const getErrorType = function(fileName) {
   return { missingFile, usage };
 };
 
-const isValidArgs = function(userArgs, isExist) {
+const getErrorInArgs = function(userArgs, isExist) {
   const errors = getErrorType(userArgs.fileNames);
   if (userArgs.fields == undefined) return { error: errors.usage };
   if (userArgs.fileNames[0] && !isExist(userArgs.fileNames[0]))
@@ -32,4 +32,4 @@ const isValidArgs = function(userArgs, isExist) {
   return {};
 };
 
-module.exports = { getParsedArgs, isValidArgs };
+module.exports = { getParsedArgs, getErrorInArgs };
