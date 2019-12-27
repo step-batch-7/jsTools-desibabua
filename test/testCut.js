@@ -2,10 +2,7 @@ const assert = require("chai").assert;
 const { cut, getContent, performCut } = require("../src/cutLib");
 
 describe("cut", function() {
-  
-  const usageError = `usage: cut -b list [-n] [file ...]
-  cut -c list [file ...]
-  cut -f list [-s] [-d delim] [file ...]`;
+  const usageError = `usage: cut -b list [-n] [file ...]\n       cut -c list [file ...]\n       cut -f list [-s] [-d delim] [file ...]`;
 
   it("should cut according to userArgs", function() {
     const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };

@@ -20,9 +20,7 @@ const getParsedArgs = function(userArgs) {
 
 const getErrorType = function(fileName) {
   const missingFile = `cut: ${fileName}: No such file or directory`;
-  const usage = `usage: cut -b list [-n] [file ...]
-  cut -c list [file ...]
-  cut -f list [-s] [-d delim] [file ...]`;
+  const usage = `usage: cut -b list [-n] [file ...]\n       cut -c list [file ...]\n       cut -f list [-s] [-d delim] [file ...]`;
   return { missingFile, usage };
 };
 
