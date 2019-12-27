@@ -6,7 +6,7 @@ describe("cut", function() {
 
   it("should cut according to userArgs", function() {
     const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
-    const isExist = function(fileName) {
+    const doesExist = function(fileName) {
       assert.equal(fileName, "a.text");
       return true;
     };
@@ -17,16 +17,15 @@ describe("cut", function() {
     };
 
     const display = function(output) {
-      assert.deepStrictEqual(output, { content: "hello\ni" });
+      assert.deepStrictEqual(output, "hello\ni");
       return;
     };
-    const fsTools = { reader, isExist };
-    cut(userArgs, fsTools, display);
+    cut(userArgs, reader, doesExist, display);
   });
 
   it("should give error when file is missing", function() {
     const userArgs = { separator: " ", fileNames: ["a.text"] };
-    const isExist = function(fileName) {
+    const doesExist = function(fileName) {
       assert.equal(fileName, "a.text");
       return false;
     };
@@ -39,13 +38,12 @@ describe("cut", function() {
       });
       return;
     };
-    const fsTools = { reader, isExist };
-    cut(userArgs, fsTools, display);
+    cut(userArgs, reader, doesExist, display);
   });
 
   it("should give error when field is missing", function() {
     const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
-    const isExist = function(fileName) {
+    const doesExist = function(fileName) {
       assert.equal(fileName, "a.text");
       return false;
     };
@@ -58,8 +56,7 @@ describe("cut", function() {
       });
       return;
     };
-    const fsTools = { reader, isExist };
-    cut(userArgs, fsTools, display);
+    cut(userArgs, reader, doesExist, display);
   });
 });
 
@@ -72,16 +69,14 @@ describe("getContent", function() {
     };
 
     const actualValue = getContent("a.text", reader);
-    const expectedValue = {
-      content: ["this is a line of the file", "but not in file"]
-    };
+    const expectedValue = ["this is a line of the file", "but not in file"];
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 });
 
 describe("performCut", function() {
   it("should performCut on given content with userArgs", function() {
-    const contentOfFile = { content: ["hello where are you", "I am here."] };
+    const contentOfFile = ["hello where are you", "I am here."];
     const userArgs = { separator: " ", fields: [3] };
 
     const content = function(data) {

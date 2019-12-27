@@ -5,24 +5,23 @@ const { getReducedLines } = require("./messageOperations");
 
 const getContent = function(fileName, reader) {
   let content = reader(fileName, "utf8");
-  content = content.split("\n");
-  return { content };
+  return content.split("\n");
 };
 
 const performCut = function(fileContent, userArgs) {
   const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
-  const fields = getFields(separatedFields, userArgs.fields);
-  return getReducedLines(fields.content, userArgs.separator);
+  const content = getFields(separatedFields, userArgs.fields);
+  return getReducedLines(content, userArgs.separator);
 };
 
-const cut = function(userArgs, fsTools, display) {
-  const isError = isValidArgs(userArgs, fsTools.isExist);
+const cut = function(userArgs, reader, doesExist, display) {
+  const isError = isValidArgs(userArgs, doesExist);
   if (isError.error) {
     display(isError);
     return;
   }
   const [fileName] = userArgs.fileNames;
-  let content = getContent(fileName, fsTools.reader);
+  let content = getContent(fileName, reader);
   display(performCut(content, userArgs, display));
   return;
 };

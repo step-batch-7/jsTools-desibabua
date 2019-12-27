@@ -9,9 +9,7 @@ describe("getReducedLines", function() {
     const content = [["hello", "my"], ["this is", "my book"], [""]];
 
     let actualValue = getReducedLines(content, ",");
-    assert.deepStrictEqual(actualValue, {
-      content: "hello,my\nthis is,my book"
-    });
+    assert.deepStrictEqual(actualValue, "hello,my\nthis is,my book");
   });
 
   it("should formate the message in right manner if content is there and separator is given", function() {
@@ -22,16 +20,12 @@ describe("getReducedLines", function() {
 
     const separator = ",";
     let actualValue = getReducedLines(content, separator);
-    assert.deepStrictEqual(actualValue, {
-      content: "hello,my\nthis is,my book"
-    });
+    assert.deepStrictEqual(actualValue, "hello,my\nthis is,my book");
   });
 
   it("should formate the message in right manner if content is there and separator is not given", function() {
     const content = [["hello my"], ["this is my book"]];
     let actualValue = getReducedLines(content);
-    assert.deepStrictEqual(actualValue, {
-      content: "hello my\nthis is my book"
-    });
+    assert.deepStrictEqual(actualValue, "hello my\nthis is my book");
   });
 });

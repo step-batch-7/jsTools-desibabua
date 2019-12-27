@@ -1,13 +1,13 @@
-const getFields = function(data, fields) {
-  let returnMessage = data.content.map(line => {
+const getFields = function(lists, fields) {
+  let returnMessage = lists.map(line => {
     if (line.length == 1) return [line[0]];
     return [line[fields - 1]];
   });
-  return { content: returnMessage };
+  return returnMessage;
 };
 
-const getSeparatedFields = function(data, separator) {
-  return { content: data.content.map(line => line.split(separator)) };
+const getSeparatedFields = function(lists, separator) {
+  return lists.map(line => line.split(separator));
 };
 
 module.exports = { getFields, getSeparatedFields };

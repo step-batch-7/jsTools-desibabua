@@ -1,7 +1,7 @@
 const getReducedLines = function(content, separator) {
   let lines = content.map(line => line.join(separator));
   if (isLastLineEmpty(lines)) lines = lines.slice(0, -1);
-  return { content: lines.join("\n") };
+  return lines.join("\n");
 };
 
 const isLastLineEmpty = function(message) {
