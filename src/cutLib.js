@@ -9,7 +9,7 @@ const getContent = function(fileName, reader) {
   return { content };
 };
 
-const performCut = function(fileContent, userArgs, display) {
+const performCut = function(fileContent, userArgs) {
   const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
   const fields = getFields(separatedFields, userArgs.fields);
   return getReducedLines(fields.content, userArgs.separator);
