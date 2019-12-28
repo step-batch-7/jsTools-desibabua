@@ -3,6 +3,7 @@
 * Input Types Handled ==>
 
     1. node cut.js -f 1 sample1.txt
+    2. node cut.js -f 1 -d "," sample.txt
     
 * Files Required ==>
 
@@ -24,10 +25,14 @@
 
 * Input Types Handled:-
 
-    1. node cut.js -f 1,2 sample1.text
+    1. node cut.js -f 4
+    2. cat sample.js | node cut.js -f 4
 
 * steps :-
 
-    *change getFieldFunction and make it work for 1,2
+    * to introduce stdin
+        * modify the cut function so it can work form files as well as stdin Input
+
+    * test for stdin by help of sinon
+        * add test in the cut function
 ========
-change parse args function

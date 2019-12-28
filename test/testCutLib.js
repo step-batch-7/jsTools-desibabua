@@ -1,5 +1,6 @@
 const assert = require("chai").assert;
 const {
+  getContent,
   getFields,
   getSeparatedFields,
   getReducedLines
@@ -83,5 +84,19 @@ describe("getReducedLines", function() {
     const content = [["hello my"], ["this is my book"]];
     let actualValue = getReducedLines(content);
     assert.deepStrictEqual(actualValue, "hello my\nthis is my book");
+  });
+});
+
+describe("getContent", function() {
+  it("should loadContent from a file", function() {
+    const reader = function(path, encoding) {
+      assert.strictEqual("a.text", path);
+      assert.strictEqual("utf8", encoding);
+      return "this is a line of the file\nbut not in file";
+    };
+
+    const actualValue = getContent("a.text", reader);
+    const expectedValue = ["this is a line of the file", "but not in file"];
+    assert.deepStrictEqual(actualValue, expectedValue);
   });
 });

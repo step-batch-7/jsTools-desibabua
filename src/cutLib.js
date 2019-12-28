@@ -20,4 +20,9 @@ const isLastLineEmpty = function(message) {
   return message.slice(-1) == "";
 };
 
-module.exports = { getFields, getSeparatedFields, getReducedLines };
+const getContent = function(fileName, reader) {
+  let content = reader(fileName, "utf8");
+  return content.split("\n");
+};
+
+module.exports = { getContent, getFields, getSeparatedFields, getReducedLines };
