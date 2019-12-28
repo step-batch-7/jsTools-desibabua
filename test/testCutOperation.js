@@ -41,6 +41,24 @@ describe("cut", function() {
     cut(userArgs, reader, doesExist, display);
   });
 
+  it("should give error when count is illegal", function() {
+    const userArgs = { separator: " ", fields: ["ab"], fileNames: ["a.text"] };
+    const doesExist = function(fileName) {
+      assert.equal(fileName, "a.text");
+      return True;
+    };
+
+    const reader = function() {};
+
+    const display = function(output) {
+      assert.deepStrictEqual(output, {
+        error: `cut: [-cf] list: illegal list value`
+      });
+      return;
+    };
+    cut(userArgs, reader, doesExist, display);
+  });
+
   it("should give error when field is missing", function() {
     const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
     const doesExist = function(fileName) {
