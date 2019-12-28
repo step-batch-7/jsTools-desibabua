@@ -14,9 +14,9 @@ const performCut = function(fileContent, userArgs) {
 };
 
 const cut = function(userArgs, reader, doesExist, display) {
-  const doesContainError = getErrorInArgs(userArgs, doesExist);
-  if (doesContainError.error) {
-    display(doesContainError);
+  const error = getErrorInArgs(userArgs, doesExist);
+  if (error) {
+    display({ error });
     return;
   }
   const [fileName] = userArgs.fileNames;

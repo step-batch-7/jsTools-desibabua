@@ -10,11 +10,6 @@ describe("getParsedArgs", function() {
     let actualValue = getParsedArgs(userArgs);
     let expectedValue = { separator: " ", fields: [3], fileNames: ["a.text"] };
     assert.deepStrictEqual(actualValue, expectedValue);
-
-    userArgs = ["-f", "3", "-d", " ", "ab.text"];
-    actualValue = getParsedArgs(userArgs);
-    expectedValue = { separator: " ", fields: [3], fileNames: ["ab.text"] };
-    assert.deepStrictEqual(actualValue, expectedValue);
   });
 
   it("should give parsed args when -d is not there", function() {
@@ -30,7 +25,7 @@ describe("getParsedArgs", function() {
     let expectedValue = {
       separator: "\t",
       fields: undefined,
-      fileNames: ["a.text"]
+      fileNames: [undefined]
     };
     assert.deepStrictEqual(actualValue, expectedValue);
   });
