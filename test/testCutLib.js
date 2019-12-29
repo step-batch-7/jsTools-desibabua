@@ -1,15 +1,13 @@
 const assert = require('chai').assert;
 const {
-  getContent,
-  getFields,
-  getSeparatedFields,
-  getReducedLines
+  performCut, getFields,
+  getSeparatedFields, getReducedLines
 } = require('../src/cutLib');
 
-describe('getFields', function() {
+describe('getFields', function () {
   const one = 1;
   const three = 3;
-  it('should get the desired fields when field is available', function() {
+  it('should get the desired fields when field is available', function () {
     const data = [
       ['hello', 'my', 'name'],
       ['this is', 'my book']
@@ -20,7 +18,7 @@ describe('getFields', function() {
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 
-  it('should get the desired fields when field is not available', function() {
+  it('should get the desired fields when field is not available', function () {
     const data = [
       ['hello', 'my', 'name'],
       ['this is', 'my book']
@@ -31,7 +29,7 @@ describe('getFields', function() {
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 
-  it('should get fields if content element has length one', function() {
+  it('should get fields if content element has length one', function () {
     const data = [['hello my name'], ['this is', 'my book']];
     const fields = [three];
     const actualValue = getFields(data, fields);
@@ -40,8 +38,8 @@ describe('getFields', function() {
   });
 });
 
-describe('getSeparatedLines', function() {
-  it('should separate lines by given separator', function() {
+describe('getSeparatedLines', function () {
+  it('should separate lines by given separator', function () {
     const data = ['hello,good morning', 'this is my book,but i have one'];
     const separator = ' ';
     const actualValue = getSeparatedFields(data, separator);
@@ -52,7 +50,7 @@ describe('getSeparatedLines', function() {
     assert.deepStrictEqual(actualValue, expectedValue);
   });
 
-  it('should not separate lines when separator is not given', function() {
+  it('should not separate lines when separator is not given', function () {
     const data = ['hello,good morning', 'this is my book,but i have one'];
     const actualValue = getSeparatedFields(data);
     const expectedValue = [
@@ -63,15 +61,15 @@ describe('getSeparatedLines', function() {
   });
 });
 
-describe('getReducedLines', function() {
-  it('should give message when last line is empty', function() {
+describe('getReducedLines', function () {
+  it('should give message when last line is empty', function () {
     const content = [['hello', 'my'], ['this is', 'my book'], ['']];
 
     const actualValue = getReducedLines(content, ',');
     assert.deepStrictEqual(actualValue, 'hello,my\nthis is,my book');
   });
 
-  it('should give lines if content and separator is given', function() {
+  it('should give lines if content and separator is given', function () {
     const content = [
       ['hello', 'my'],
       ['this is', 'my book']
@@ -82,23 +80,26 @@ describe('getReducedLines', function() {
     assert.deepStrictEqual(actualValue, 'hello,my\nthis is,my book');
   });
 
-  it('should give lines if content is given and separator is not', function() {
+  it('should give lines if content is given and separator is not', function () {
     const content = [['hello my'], ['this is my book']];
     const actualValue = getReducedLines(content);
     assert.deepStrictEqual(actualValue, 'hello my\nthis is my book');
   });
 });
 
-describe('getContent', function() {
-  it('should loadContent from a file', function() {
-    const reader = function(path, encoding) {
-      assert.strictEqual('a.text', path);
-      assert.strictEqual('utf8', encoding);
-      return 'this is a line of the file\nbut not in file';
-    };
+describe('performCut', function () {
+  it('should performCut on given content with userArgs', function () {
+    const three = 3;
+    const contentOfFile = ['hello where are you', 'I am here.'];
+    const userArgs = { separator: ' ', fields: [three] };
 
-    const actualValue = getContent('a.text', reader);
-    const expectedValue = ['this is a line of the file', 'but not in file'];
-    assert.deepStrictEqual(actualValue, expectedValue);
+    const content = function (data) {
+      assert.equal(data, 'are\nhere.');
+      return true;
+    };
+    const print = { content };
+
+    const actualValue = performCut(contentOfFile, userArgs, print);
+    assert.isOk(actualValue);
   });
 });

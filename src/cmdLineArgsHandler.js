@@ -18,25 +18,21 @@ const getParsedArgs = function (userArgs) {
   return { separator, fields, fileNames };
 };
 
-const getErrorType = function (fileName) {
-  const missingFile = `cut: ${fileName}: No such file or directory`;
+const getErrorType = function () {
   let usage =
     'usage: cut -b list [-n] [file ...]\n       cut -c list [file ...]\n';
   usage = usage + '       cut -f list [-s] [-d delim] [file ...]';
   const illegalCount = 'cut: [-cf] list: illegal list value';
-  return { missingFile, usage, illegalCount };
+  return { usage, illegalCount};
 };
 
-const getErrorInArgs = function (userArgs, isExist) {
-  const errors = getErrorType(userArgs.fileNames);
+const getErrorInArgs = function (userArgs) {
+  const errors = getErrorType();
   if (!userArgs.fields) {
     return errors.usage;
   }
   if (!Number(userArgs.fields)) {
     return errors.illegalCount;
-  }
-  if (userArgs.fileNames[0] && !isExist(userArgs.fileNames[0])) {
-    return errors.missingFile;
   }
   return false;
 };

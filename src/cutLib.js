@@ -1,4 +1,4 @@
-const getFields = function(lists, fields) {
+const getFields = function (lists, fields) {
   const returnMessage = lists.map(line => {
     if (line.length === 1) {
       return [line[0]];
@@ -8,11 +8,11 @@ const getFields = function(lists, fields) {
   return returnMessage;
 };
 
-const getSeparatedFields = function(lists, separator) {
+const getSeparatedFields = function (lists, separator) {
   return lists.map(line => line.split(separator));
 };
 
-const getReducedLines = function(content, separator) {
+const getReducedLines = function (content, separator) {
   let lines = content.map(line => line.join(separator));
   if (isLastLineEmpty(lines)) {
     lines = lines.slice(0, -1);
@@ -20,13 +20,35 @@ const getReducedLines = function(content, separator) {
   return lines.join('\n');
 };
 
-const isLastLineEmpty = function(message) {
+const isLastLineEmpty = function (message) {
   return message.slice(-1)[0] === '';
 };
 
-const getContent = function(fileName, reader) {
-  const content = reader(fileName, 'utf8');
-  return content.split('\n');
+const performCut = function (fileContent, userArgs) {
+  const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
+  const content = getFields(separatedFields, userArgs.fields);
+  return getReducedLines(content, userArgs.separator);
 };
 
-module.exports = { getContent, getFields, getSeparatedFields, getReducedLines };
+const showCutLines = function (usrArgs, reader, display) {
+  const [fileName] = usrArgs.fileNames;
+
+  const getFileError = {
+    ENOENT: `cut: ${fileName}: No such file or directory`,
+    EACCES: `cut: ${fileName}: Permission denied`,
+  };
+
+  reader(fileName, 'utf8', (err, data) => {
+    if (err) {
+      display({ error: getFileError[err.code] });
+      return;
+    }
+    const content = data.split('\n');
+    display(performCut(content, usrArgs));
+  });
+};
+
+module.exports = {
+  showCutLines, getFields,
+  getSeparatedFields, getReducedLines, performCut
+};
