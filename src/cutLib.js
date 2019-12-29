@@ -1,6 +1,8 @@
 const getFields = function(lists, fields) {
-  let returnMessage = lists.map(line => {
-    if (line.length == 1) return [line[0]];
+  const returnMessage = lists.map(line => {
+    if (line.length === 1) {
+      return [line[0]];
+    }
     return [line[fields - 1]];
   });
   return returnMessage;
@@ -12,17 +14,19 @@ const getSeparatedFields = function(lists, separator) {
 
 const getReducedLines = function(content, separator) {
   let lines = content.map(line => line.join(separator));
-  if (isLastLineEmpty(lines)) lines = lines.slice(0, -1);
-  return lines.join("\n");
+  if (isLastLineEmpty(lines)) {
+    lines = lines.slice(0, -1);
+  }
+  return lines.join('\n');
 };
 
 const isLastLineEmpty = function(message) {
-  return message.slice(-1) == "";
+  return message.slice(-1)[0] === '';
 };
 
 const getContent = function(fileName, reader) {
-  let content = reader(fileName, "utf8");
-  return content.split("\n");
+  const content = reader(fileName, 'utf8');
+  return content.split('\n');
 };
 
 module.exports = { getContent, getFields, getSeparatedFields, getReducedLines };

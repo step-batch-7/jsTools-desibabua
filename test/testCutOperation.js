@@ -1,32 +1,34 @@
-const assert = require("chai").assert;
-const { cut, performCut } = require("../src/cutOperation");
+const assert = require('chai').assert;
+const { cut, performCut } = require('../src/cutOperation');
 
-describe("cut", function() {
-  const usageError = `usage: cut -b list [-n] [file ...]\n       cut -c list [file ...]\n       cut -f list [-s] [-d delim] [file ...]`;
+describe('cut', function() {
+  const one = 1;
+  let usageError = 'usage: cut -b list [-n] [file ...]\n       ';
+  usageError +=
+    'cut -c list [file ...]\n       cut -f list [-s] [-d delim] [file ...]';
 
-  it("should cut according to userArgs", function() {
-    const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
+  it('should cut according to userArgs', function() {
+    const userArgs = { separator: ' ', fields: [one], fileNames: ['a.text'] };
     const doesExist = function(fileName) {
-      assert.equal(fileName, "a.text");
+      assert.equal(fileName, 'a.text');
       return true;
     };
 
     const reader = function(fileName) {
-      assert.equal(fileName, "a.text");
-      return "hello\ni am here";
+      assert.equal(fileName, 'a.text');
+      return 'hello\ni am here';
     };
 
     const display = function(output) {
-      assert.deepStrictEqual(output, "hello\ni");
-      return;
+      assert.deepStrictEqual(output, 'hello\ni');
     };
     cut(userArgs, reader, doesExist, display);
   });
 
-  it("should give error when file is missing", function() {
-    const userArgs = { separator: " ", fileNames: ["a.text"] };
+  it('should give error when file is missing', function() {
+    const userArgs = { separator: ' ', fileNames: ['a.text'] };
     const doesExist = function(fileName) {
-      assert.equal(fileName, "a.text");
+      assert.equal(fileName, 'a.text');
       return false;
     };
 
@@ -36,33 +38,31 @@ describe("cut", function() {
       assert.deepStrictEqual(output, {
         error: usageError
       });
-      return;
     };
     cut(userArgs, reader, doesExist, display);
   });
 
-  it("should give error when count is illegal", function() {
-    const userArgs = { separator: " ", fields: ["ab"], fileNames: ["a.text"] };
+  it('should give error when count is illegal', function() {
+    const userArgs = { separator: ' ', fields: ['ab'], fileNames: ['a.text'] };
     const doesExist = function(fileName) {
-      assert.equal(fileName, "a.text");
-      return True;
+      assert.equal(fileName, 'a.text');
+      return true;
     };
 
     const reader = function() {};
 
     const display = function(output) {
       assert.deepStrictEqual(output, {
-        error: `cut: [-cf] list: illegal list value`
+        error: 'cut: [-cf] list: illegal list value'
       });
-      return;
     };
     cut(userArgs, reader, doesExist, display);
   });
 
-  it("should give error when field is missing", function() {
-    const userArgs = { separator: " ", fields: [1], fileNames: ["a.text"] };
+  it('should give error when field is missing', function() {
+    const userArgs = { separator: ' ', fields: [one], fileNames: ['a.text'] };
     const doesExist = function(fileName) {
-      assert.equal(fileName, "a.text");
+      assert.equal(fileName, 'a.text');
       return false;
     };
 
@@ -70,26 +70,26 @@ describe("cut", function() {
 
     const display = function(output) {
       assert.deepStrictEqual(output, {
-        error: "cut: a.text: No such file or directory"
+        error: 'cut: a.text: No such file or directory'
       });
-      return;
     };
     cut(userArgs, reader, doesExist, display);
   });
 });
 
-describe("performCut", function() {
-  it("should performCut on given content with userArgs", function() {
-    const contentOfFile = ["hello where are you", "I am here."];
-    const userArgs = { separator: " ", fields: [3] };
+describe('performCut', function() {
+  it('should performCut on given content with userArgs', function() {
+    const three = 3;
+    const contentOfFile = ['hello where are you', 'I am here.'];
+    const userArgs = { separator: ' ', fields: [three] };
 
     const content = function(data) {
-      assert.equal(data, "are\nhere.");
+      assert.equal(data, 'are\nhere.');
       return true;
     };
     const print = { content };
 
-    let actualValue = performCut(contentOfFile, userArgs, print);
+    const actualValue = performCut(contentOfFile, userArgs, print);
     assert.isOk(actualValue);
   });
 });
