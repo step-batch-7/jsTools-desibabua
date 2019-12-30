@@ -1,7 +1,9 @@
 const getFields = function (lists, fields) {
+
   const returnMessage = lists.map(line => {
+    const [firstElement] = line;
     if (line.length === 1) {
-      return [line[0]];
+      return [firstElement];
     }
     return [line[fields - 1]];
   });
