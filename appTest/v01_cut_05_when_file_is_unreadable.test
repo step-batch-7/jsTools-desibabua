@@ -1,0 +1,2 @@
+(chmod -r appTest/sample2.txt;cut -f 2 appTest/sample2.txt;chmod +r appTest/sample2.txt)
+cut: appTest/sample2.txt: Permission denied

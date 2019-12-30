@@ -1,2 +1,2 @@
-node cut.js -d " " -f ab appTests/numbers.txt
+node cut.js -d " " -f ab appTest/sample.txt
 cut: [-cf] list: illegal list value

@@ -1,6 +1,8 @@
 const assert = require('chai').assert;
+const sinon = require('sinon');
+const fs = require('fs');
 const {
-  performCut, getFields,
+  performCut, getFields, showCutLines,
   getSeparatedFields, getReducedLines
 } = require('../src/cutLib');
 
@@ -92,14 +94,32 @@ describe('performCut', function () {
     const three = 3;
     const contentOfFile = ['hello where are you', 'I am here.'];
     const userArgs = { separator: ' ', fields: [three] };
-
-    const content = function (data) {
-      assert.equal(data, 'are\nhere.');
-      return true;
-    };
-    const print = { content };
-
-    const actualValue = performCut(contentOfFile, userArgs, print);
+    const actualValue = performCut(contentOfFile, userArgs);
     assert.isOk(actualValue);
+  });
+});
+
+describe('showCutLines', function () {
+  it('it should call display with fileContent when error is null', function () {
+    const userArgs = { separator: '\t', fields: [1], fileNames: ['a.text'] };
+
+    const display = function (args) {
+      assert.strictEqual(args, 'fileContent');
+    };
+
+    const fakeReader = sinon.fake.yieldsAsync(null, 'fileContent');
+    showCutLines(userArgs, fakeReader, display);
+  });
+
+  it('it should call display with error when content is null', function () {
+    const userArgs = { separator: '\t', fields: [1], fileNames: ['a.text'] };
+    const errorMessage = { error: 'cut: a.text: No such file or directory' };
+
+    const display = function (args) {
+      assert.deepStrictEqual(args, errorMessage);
+    };
+
+    const fakeReader = sinon.fake.yieldsAsync({ code: 'ENOENT' }, null);
+    showCutLines(userArgs, fakeReader, display);
   });
 });
