@@ -5,11 +5,16 @@ const { getParsedArgs } = require('./src/cmdLineArgsHandler');
 const { cut } = require('./src/cutOperation');
 
 const display = function (output) {
-  output.error ? process.stderr.write(output.error) : process.stdout.write(output);
+  if (output.error) {
+    process.stderr.write(output.error);
+    return;
+  }
+  process.stdout.write(output);
 };
 
 const main = function () {
-  const userArgs = getParsedArgs(process.argv.slice(2));
+  const [, , ...cmdLineArgs] = process.argv;
+  const userArgs = getParsedArgs(cmdLineArgs);
   cut(userArgs, fs.readFile, display);
 };
 
