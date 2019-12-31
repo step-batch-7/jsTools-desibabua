@@ -4,14 +4,16 @@ const getParsedArgs = function (userArgs) {
 
   const isOptionPresent = (key) => userArgs.includes(key);
 
-  const getOptionValue = (key, num = 1) => {
+  const getOptionValue = (key, num) => {
     const index = userArgs.indexOf(key) + num;
     return userArgs[index];
   };
 
-  const separator = isOptionPresent('-d') ? getOptionValue('-d') : '\t';
-  const fields = isOptionPresent('-f') ? [+getOptionValue('-f')] : undefined;
-  const fileNames = [getOptionValue('-f', 2)];
+  const one = 1;
+  const two = 2;
+  const separator = isOptionPresent('-d') ? getOptionValue('-d', one) : '\t';
+  const fields = isOptionPresent('-f') ? +getOptionValue('-f', one) : undefined;
+  const fileNames = getOptionValue('-f', two);
   return { separator, fields, fileNames };
 };
 
@@ -25,7 +27,7 @@ const getErrorType = function () {
 
 const getErrorInArgs = function (userArgs) {
   const errors = getErrorType();
-  if (!userArgs.fields) {
+  if (userArgs.fields === undefined) {
     return errors.usage;
   }
   if (!Number(userArgs.fields)) {

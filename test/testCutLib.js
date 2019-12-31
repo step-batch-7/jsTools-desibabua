@@ -1,6 +1,5 @@
 const assert = require('chai').assert;
 const sinon = require('sinon');
-const fs = require('fs');
 const {
   performCut, getFields, showCutLines,
   getSeparatedFields, getReducedLines
@@ -14,7 +13,7 @@ describe('getFields', function () {
       ['hello', 'my', 'name'],
       ['this is', 'my book']
     ];
-    const fields = [one];
+    const fields = one;
     const actualValue = getFields(data, fields);
     const expectedValue = [['hello'], ['this is']];
     assert.deepStrictEqual(actualValue, expectedValue);
@@ -25,7 +24,7 @@ describe('getFields', function () {
       ['hello', 'my', 'name'],
       ['this is', 'my book']
     ];
-    const fields = [three];
+    const fields = three;
     const actualValue = getFields(data, fields);
     const expectedValue = [['name'], [undefined]];
     assert.deepStrictEqual(actualValue, expectedValue);
@@ -33,7 +32,7 @@ describe('getFields', function () {
 
   it('should get fields if content element has length one', function () {
     const data = [['hello my name'], ['this is', 'my book']];
-    const fields = [three];
+    const fields = three;
     const actualValue = getFields(data, fields);
     const expectedValue = [['hello my name'], [undefined]];
     assert.deepStrictEqual(actualValue, expectedValue);
@@ -64,13 +63,6 @@ describe('getSeparatedLines', function () {
 });
 
 describe('getReducedLines', function () {
-  it('should give message when last line is empty', function () {
-    const content = [['hello', 'my'], ['this is', 'my book'], ['']];
-
-    const actualValue = getReducedLines(content, ',');
-    assert.deepStrictEqual(actualValue, 'hello,my\nthis is,my book');
-  });
-
   it('should give lines if content and separator is given', function () {
     const content = [
       ['hello', 'my'],
@@ -91,32 +83,46 @@ describe('getReducedLines', function () {
 
 describe('performCut', function () {
   it('should performCut on given content with userArgs', function () {
-    const three = 3;
-    const contentOfFile = ['hello where are you', 'I am here.'];
-    const userArgs = { separator: ' ', fields: [three] };
+    const fields = 3;
+    const contentOfFile = 'hello where are you\nI am here.';
+    const userArgs = { separator: ' ', fields };
     const actualValue = performCut(contentOfFile, userArgs);
-    assert.isOk(actualValue);
+    const expectedValue = 'are\nhere.';
+    assert.strictEqual(actualValue, expectedValue);
   });
+
+  it('should perform cut when last line is empty', function () {
+    const content = 'hello\nmy this is my book\n ';
+    const fields = 1;
+    const userArgs = { separator: ' ', fields };
+    const actualValue = performCut(content, userArgs);
+    assert.strictEqual(actualValue, 'hello\nmy');
+  });
+
 });
 
 describe('showCutLines', function () {
-  it('it should call display with fileContent when error is null', function () {
-    const userArgs = { separator: '\t', fields: [1], fileNames: ['a.text'] };
+  it('it should call display with fileContent is there', function (done) {
+    const fields = 1;
+    const userArgs = { separator: '\t', fields, fileNames: ['a.text'] };
 
     const display = function (args) {
       assert.strictEqual(args, 'fileContent');
+      done();
     };
 
     const fakeReader = sinon.fake.yieldsAsync(null, 'fileContent');
     showCutLines(userArgs, fakeReader, display);
   });
 
-  it('it should call display with error when content is null', function () {
-    const userArgs = { separator: '\t', fields: [1], fileNames: ['a.text'] };
+  it('it should call display with error when content is null', function (done) {
+    const fields = 1;
+    const userArgs = { separator: '\t', fields, fileNames: ['a.text'] };
     const errorMessage = { error: 'cut: a.text: No such file or directory' };
 
     const display = function (args) {
       assert.deepStrictEqual(args, errorMessage);
+      done();
     };
 
     const fakeReader = sinon.fake.yieldsAsync({ code: 'ENOENT' }, null);

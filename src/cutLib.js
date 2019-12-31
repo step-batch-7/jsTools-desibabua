@@ -1,11 +1,11 @@
 const getFields = function (lists, fields) {
-
+  const unit = 1;
+  const minLength = 1;
   const returnMessage = lists.map(line => {
-    const [firstElement] = line;
-    if (line.length === 1) {
-      return [firstElement];
+    if (line.length === minLength) {
+      return line;
     }
-    return [line[fields - 1]];
+    return [line[fields - unit]];
   });
   return returnMessage;
 };
@@ -15,25 +15,28 @@ const getSeparatedFields = function (lists, separator) {
 };
 
 const getReducedLines = function (content, separator) {
-  let lines = content.map(line => line.join(separator));
-  if (isLastLineEmpty(lines)) {
-    lines = lines.slice(0, -1);
-  }
+  const lines = content.map(line => line.join(separator));
   return lines.join('\n');
 };
 
-const isLastLineEmpty = function (message) {
-  return message.slice(-1)[0] === '';
+const removeLastEmptyLine = function (lines) {
+  const firstIndex = 0;
+  const lastIndex = -2;
+  if (lines.endsWith('\n ')) {
+    return lines.slice(firstIndex, lastIndex).split('\n');
+  }
+  return lines.split('\n');
 };
 
 const performCut = function (fileContent, userArgs) {
-  const separatedFields = getSeparatedFields(fileContent, userArgs.separator);
+  const lines = removeLastEmptyLine(fileContent);
+  const separatedFields = getSeparatedFields(lines, userArgs.separator);
   const content = getFields(separatedFields, userArgs.fields);
   return getReducedLines(content, userArgs.separator);
 };
 
 const showCutLines = function (usrArgs, reader, display) {
-  const [fileName] = usrArgs.fileNames;
+  const fileName = usrArgs.fileNames;
 
   const getFileError = {
     ENOENT: `cut: ${fileName}: No such file or directory`,
@@ -45,8 +48,7 @@ const showCutLines = function (usrArgs, reader, display) {
       display({ error: getFileError[err.code] });
       return;
     }
-    const content = data.split('\n');
-    display(performCut(content, usrArgs));
+    display(performCut(data, usrArgs));
   });
 };
 

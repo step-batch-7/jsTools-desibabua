@@ -33,6 +33,10 @@
     * to introduce stdin
         * modify the cut function so it can work form files as well as stdin Input
 
+    * make the input wait when file is not given
+
+    * should also work with cat of some file and should not wait for further input
+
     * test for stdin by help of sinon
         * add test in the cut function
 ========
