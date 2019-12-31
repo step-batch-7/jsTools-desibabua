@@ -85,8 +85,7 @@ describe('performCut', function () {
   it('should performCut on given content with userArgs', function () {
     const fields = 3;
     const contentOfFile = 'hello where are you\nI am here.';
-    const userArgs = { separator: ' ', fields };
-    const actualValue = performCut(contentOfFile, userArgs);
+    const actualValue = performCut(contentOfFile, ' ', fields);
     const expectedValue = 'are\nhere.';
     assert.strictEqual(actualValue, expectedValue);
   });
@@ -94,8 +93,7 @@ describe('performCut', function () {
   it('should perform cut when last line is empty', function () {
     const content = 'hello\nmy this is my book\n ';
     const fields = 1;
-    const userArgs = { separator: ' ', fields };
-    const actualValue = performCut(content, userArgs);
+    const actualValue = performCut(content, ' ', fields);
     assert.strictEqual(actualValue, 'hello\nmy');
   });
 
@@ -109,8 +107,8 @@ describe('showCutLines', function () {
     const fields = 1;
     const userArgs = { separator: '\t', fields, fileNames: 'a.text' };
 
-    const display = function (args) {
-      assert.strictEqual(args, 'fileContent');
+    const display = function (content) {
+      assert.deepStrictEqual(content, { lines: 'fileContent', error: '' });
       done();
     };
 
@@ -124,10 +122,10 @@ describe('showCutLines', function () {
   it('it should call display with error when content is null', function (done) {
     const fields = 2;
     const userArgs = { separator: '\t', fields, fileNames: 'bad.text' };
-    const errorMessage = { error: 'cut: bad.text: No such file or directory' };
+    const errorMessage = 'cut: bad.text: No such file or directory' ;
 
-    const display = function (args) {
-      assert.deepStrictEqual(args, errorMessage);
+    const display = function (content) {
+      assert.deepStrictEqual(content, { error: errorMessage, lines: '' });
       done();
     };
 

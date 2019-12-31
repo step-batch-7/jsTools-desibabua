@@ -6,12 +6,10 @@ const cut = function (userArgs, reader, display) {
   const error = getErrorInArgs(userArgs);
 
   if (error) {
-    display({ error });
+    display({ error, lines: '' });
     return;
   }
   showCutLines(userArgs, reader, display);
 };
 
-module.exports = {
-  cut
-};
+module.exports = { cut };

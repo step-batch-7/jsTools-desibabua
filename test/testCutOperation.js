@@ -16,7 +16,7 @@ describe('cut', function () {
     };
 
     const display = function (output) {
-      assert.deepStrictEqual(output, 'hello\ni');
+      assert.deepStrictEqual(output, { error: '', lines: 'hello\ni'});
     };
     cut(userArgs, reader, display);
   });
@@ -27,9 +27,7 @@ describe('cut', function () {
     const reader = function () { };
 
     const display = function (output) {
-      assert.deepStrictEqual(output, {
-        error: usageError
-      });
+      assert.deepStrictEqual(output, { error: usageError, lines: '' });
     };
     cut(userArgs, reader, display);
   });
@@ -41,7 +39,8 @@ describe('cut', function () {
 
     const display = function (output) {
       assert.deepStrictEqual(output, {
-        error: 'cut: [-cf] list: illegal list value'
+        error: 'cut: [-cf] list: illegal list value',
+        lines: ''
       });
     };
     cut(userArgs, reader, display);
@@ -53,7 +52,8 @@ describe('cut', function () {
 
     const display = function (output) {
       assert.deepStrictEqual(output, {
-        error: 'cut: a.text: No such file or directory'
+        error: 'cut: a.text: No such file or directory',
+        lines: ''
       });
     };
     cut(userArgs, reader, display);

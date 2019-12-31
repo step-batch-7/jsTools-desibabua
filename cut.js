@@ -1,15 +1,13 @@
 'use strict';
 
 const fs = require('fs');
+const { stdout, stderr } = require('process');
 const { getParsedArgs } = require('./src/cmdLineArgsHandler');
 const { cut } = require('./src/cutOperation');
 
 const display = function (output) {
-  if (output.error) {
-    process.stderr.write(output.error);
-    return;
-  }
-  process.stdout.write(output);
+  stderr.write(output.error);
+  stdout.write(output.lines);
 };
 
 const main = function () {
