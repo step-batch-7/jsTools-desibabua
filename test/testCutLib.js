@@ -102,23 +102,29 @@ describe('performCut', function () {
 });
 
 describe('showCutLines', function () {
+  const firstIndex = 0;
+  const secondIndex = 1;
+
   it('it should call display with fileContent is there', function (done) {
     const fields = 1;
-    const userArgs = { separator: '\t', fields, fileNames: ['a.text'] };
+    const userArgs = { separator: '\t', fields, fileNames: 'a.text' };
 
     const display = function (args) {
       assert.strictEqual(args, 'fileContent');
       done();
     };
 
+
     const fakeReader = sinon.fake.yieldsAsync(null, 'fileContent');
     showCutLines(userArgs, fakeReader, display);
+    assert.strictEqual(fakeReader.firstCall.args[firstIndex], 'a.text');
+    assert.strictEqual(fakeReader.firstCall.args[secondIndex], 'utf8');
   });
 
   it('it should call display with error when content is null', function (done) {
-    const fields = 1;
-    const userArgs = { separator: '\t', fields, fileNames: ['a.text'] };
-    const errorMessage = { error: 'cut: a.text: No such file or directory' };
+    const fields = 2;
+    const userArgs = { separator: '\t', fields, fileNames: 'bad.text' };
+    const errorMessage = { error: 'cut: bad.text: No such file or directory' };
 
     const display = function (args) {
       assert.deepStrictEqual(args, errorMessage);
@@ -127,5 +133,7 @@ describe('showCutLines', function () {
 
     const fakeReader = sinon.fake.yieldsAsync({ code: 'ENOENT' }, null);
     showCutLines(userArgs, fakeReader, display);
+    assert.strictEqual(fakeReader.firstCall.args[firstIndex], 'bad.text');
+    assert.strictEqual(fakeReader.firstCall.args[secondIndex], 'utf8');
   });
 });
