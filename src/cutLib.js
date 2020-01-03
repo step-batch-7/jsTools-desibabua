@@ -46,10 +46,10 @@ const showCutLines = function (usrArgs, reader, display) {
 
   reader(fileName, 'utf8', (err, lines) => {
     if (err) {
-      display({ error: getFileError[err.code], lines: '' });
+      display({error: getFileError[err.code], lines: ''});
       return;
     }
-    display({ lines: performCut(lines, separator, fields), error: '' });
+    display({lines: performCut(lines, separator, fields), error: ''});
   });
 };
 

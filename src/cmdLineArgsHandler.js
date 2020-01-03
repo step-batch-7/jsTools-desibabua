@@ -14,7 +14,7 @@ const getParsedArgs = function (userArgs) {
   const separator = isOptionPresent('-d') ? getOptionValue('-d', one) : '\t';
   const fields = isOptionPresent('-f') ? +getOptionValue('-f', one) : undefined;
   const fileNames = getOptionValue('-f', two);
-  return { separator, fields, fileNames };
+  return {separator, fields, fileNames};
 };
 
 const getErrorType = function () {
@@ -22,7 +22,7 @@ const getErrorType = function () {
     'usage: cut -b list [-n] [file ...]\n       cut -c list [file ...]\n';
   usage = usage + '       cut -f list [-s] [-d delim] [file ...]';
   const illegalCount = 'cut: [-cf] list: illegal list value';
-  return { usage, illegalCount };
+  return {usage, illegalCount};
 };
 
 const getErrorInArgs = function (userArgs) {
@@ -36,4 +36,4 @@ const getErrorInArgs = function (userArgs) {
   return false;
 };
 
-module.exports = { getParsedArgs, getErrorInArgs };
+module.exports = {getParsedArgs, getErrorInArgs};

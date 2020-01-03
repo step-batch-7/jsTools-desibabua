@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const { cut } = require('../src/cutOperation');
+const {cut} = require('../src/cutOperation');
 
 describe('cut', function () {
   const one = 1;
@@ -8,7 +8,7 @@ describe('cut', function () {
     'cut -c list [file ...]\n       cut -f list [-s] [-d delim] [file ...]';
 
   it('should cut according to userArgs', function () {
-    const userArgs = { separator: ' ', fields: [one], fileNames: ['a.text'] };
+    const userArgs = {separator: ' ', fields: [one], fileNames: ['a.text']};
 
     const reader = function (fileName) {
       assert.equal(fileName, 'a.text');
@@ -16,24 +16,24 @@ describe('cut', function () {
     };
 
     const display = function (output) {
-      assert.deepStrictEqual(output, { error: '', lines: 'hello\ni'});
+      assert.deepStrictEqual(output, {error: '', lines: 'hello\ni'});
     };
     cut(userArgs, reader, display);
   });
 
   it('should give error when file is missing', function () {
-    const userArgs = { separator: ' ', fileNames: ['a.text'] };
+    const userArgs = {separator: ' ', fileNames: ['a.text']};
 
     const reader = function () { };
 
     const display = function (output) {
-      assert.deepStrictEqual(output, { error: usageError, lines: '' });
+      assert.deepStrictEqual(output, {error: usageError, lines: ''});
     };
     cut(userArgs, reader, display);
   });
 
   it('should give error when count is illegal', function () {
-    const userArgs = { separator: ' ', fields: ['ab'], fileNames: ['a.text'] };
+    const userArgs = {separator: ' ', fields: ['ab'], fileNames: ['a.text']};
 
     const reader = function () { };
 
@@ -47,7 +47,7 @@ describe('cut', function () {
   });
 
   it('should give error when field is missing', function () {
-    const userArgs = { separator: ' ', fields: [one], fileNames: ['a.text'] };
+    const userArgs = {separator: ' ', fields: [one], fileNames: ['a.text']};
     const reader = function () { };
 
     const display = function (output) {

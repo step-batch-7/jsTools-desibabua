@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { getParsedArgs } = require('../src/cmdLineArgsHandler');
+const {getParsedArgs} = require('../src/cmdLineArgsHandler');
 
 describe('getParsedArgs', function () {
   const three = 3;
