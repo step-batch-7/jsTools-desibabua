@@ -91,7 +91,7 @@ describe('performCut', function () {
   });
 
   it('should perform cut when last line is empty', function () {
-    const content = 'hello\nmy this is my book\n ';
+    const content = 'hello\nmy this is my book\n';
     const fields = 1;
     const actualValue = performCut(content, ' ', fields);
     assert.strictEqual(actualValue, 'hello\nmy');

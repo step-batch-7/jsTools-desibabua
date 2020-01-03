@@ -21,8 +21,8 @@ const getReducedLines = function (content, separator) {
 
 const removeLastEmptyLine = function (lines) {
   const firstIndex = 0;
-  const lastIndex = -2;
-  if (lines.endsWith('\n ')) {
+  const lastIndex = -1;
+  if (lines.endsWith('\n')) {
     return lines.slice(firstIndex, lastIndex).split('\n');
   }
   return lines.split('\n');
@@ -38,7 +38,6 @@ const performCut = function (fileContent, separator, fields) {
 const showCutLines = function (usrArgs, reader, display) {
   const fileName = usrArgs.fileNames;
   const [separator, fields] = [usrArgs.separator, usrArgs.fields];
-
   const getFileError = {
     ENOENT: `cut: ${fileName}: No such file or directory`,
     EACCES: `cut: ${fileName}: Permission denied`,
@@ -53,7 +52,17 @@ const showCutLines = function (usrArgs, reader, display) {
   });
 };
 
+const showCutLinesOnStdin = function (usrArgs, stdin, display) {
+  stdin.setEncoding('utf8');
+  const [separator, fields] = [usrArgs.separator, usrArgs.fields];
+  stdin.on('data', (chunk) => {
+    display({
+      lines: `${performCut(chunk, separator, fields)}\n`, error: ''
+    });
+  });
+};
+
 module.exports = {
-  showCutLines, getFields,
+  showCutLines, showCutLinesOnStdin, getFields,
   getSeparatedFields, getReducedLines, performCut
 };

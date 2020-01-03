@@ -1,9 +1,10 @@
 'use strict';
 
 const fs = require('fs');
-const {stdout, stderr} = require('process');
+
+const {stdin, stdout, stderr} = require('process');
 const {getParsedArgs} = require('./src/cmdLineArgsHandler');
-const {cut} = require('./src/cutOperation');
+const {cut, selectReader} = require('./src/cutOperation');
 
 const display = function (output) {
   stderr.write(output.error);
@@ -13,7 +14,8 @@ const display = function (output) {
 const main = function () {
   const [, , ...cmdLineArgs] = process.argv;
   const userArgs = getParsedArgs(cmdLineArgs);
-  cut(userArgs, fs.readFile, display);
+  const reader = selectReader(fs.readFile, stdin, userArgs.fileNames);
+  cut(userArgs, reader, display);
 };
 
 main();
