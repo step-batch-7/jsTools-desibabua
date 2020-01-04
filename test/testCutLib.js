@@ -1,7 +1,7 @@
 const assert = require('chai').assert;
-const sinon = require('sinon');
+
 const {
-  performCut, getFields, showCutLines,
+  performCut, getFields,
   getSeparatedFields, getReducedLines
 } = require('../src/cutLib');
 
@@ -97,40 +97,4 @@ describe('performCut', function () {
     assert.strictEqual(actualValue, 'hello\nmy');
   });
 
-});
-
-describe('showCutLines', function () {
-  const firstIndex = 0;
-  const secondIndex = 1;
-
-  it('it should call display with fileContent is there', function (done) {
-    const fields = 1;
-    const userArgs = {separator: '\t', fields, fileNames: 'a.text'};
-
-    const display = function (content) {
-      assert.deepStrictEqual(content, {lines: 'fileContent', error: ''});
-      done();
-    };
-
-    const fakeReader = sinon.fake.yieldsAsync(null, 'fileContent');
-    showCutLines(userArgs, fakeReader, display);
-    assert.strictEqual(fakeReader.firstCall.args[firstIndex], 'a.text');
-    assert.strictEqual(fakeReader.firstCall.args[secondIndex], 'utf8');
-  });
-
-  it('it should call display with error when content is null', function (done) {
-    const fields = 2;
-    const userArgs = {separator: '\t', fields, fileNames: 'bad.text'};
-    const errorMessage = 'cut: bad.text: No such file or directory';
-
-    const display = function (content) {
-      assert.deepStrictEqual(content, {error: errorMessage, lines: ''});
-      done();
-    };
-
-    const fakeReader = sinon.fake.yieldsAsync({code: 'ENOENT'}, null);
-    showCutLines(userArgs, fakeReader, display);
-    assert.strictEqual(fakeReader.firstCall.args[firstIndex], 'bad.text');
-    assert.strictEqual(fakeReader.firstCall.args[secondIndex], 'utf8');
-  });
 });

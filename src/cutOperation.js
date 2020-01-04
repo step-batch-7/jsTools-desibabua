@@ -1,5 +1,5 @@
 'use strict';
-const {showCutLines, showCutLinesOnStdin} = require('./cutLib');
+const {showCutLinesOnStdin} = require('./cutLib');
 const {getErrorInArgs} = require('./cmdLineArgsHandler');
 
 const cut = function (userArgs, reader, display) {
@@ -8,18 +8,14 @@ const cut = function (userArgs, reader, display) {
     display({error, lines: ''});
     return;
   }
-  if (!userArgs.fileNames) {
-    showCutLinesOnStdin(userArgs, reader, display);
-    return;
-  }
-  showCutLines(userArgs, reader, display);
+  showCutLinesOnStdin(userArgs, reader, display);
 };
 
-const selectReader = function (fsReader, stdIn, fileName) {
+const selectReader = function (createReadStream, stdIn, fileName) {
   if (!fileName) {
     return stdIn;
   }
-  return fsReader;
+  return createReadStream(fileName);
 };
 
 module.exports = {cut, selectReader};

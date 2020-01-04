@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const {createReadStream} = require('fs');
 
 const {stdin, stdout, stderr} = require('process');
 const {getParsedArgs} = require('./src/cmdLineArgsHandler');
@@ -14,7 +14,7 @@ const display = function (output) {
 const main = function () {
   const [, , ...cmdLineArgs] = process.argv;
   const userArgs = getParsedArgs(cmdLineArgs);
-  const reader = selectReader(fs.readFile, stdin, userArgs.fileNames);
+  const reader = selectReader(createReadStream, stdin, userArgs.fileNames);
   cut(userArgs, reader, display);
 };
 

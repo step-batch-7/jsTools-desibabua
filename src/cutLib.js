@@ -35,24 +35,12 @@ const performCut = function (fileContent, separator, fields) {
   return getReducedLines(content, separator);
 };
 
-const showCutLines = function (usrArgs, reader, display) {
+const showCutLinesOnStdin = function (usrArgs, stdin, display) {
   const fileName = usrArgs.fileNames;
-  const [separator, fields] = [usrArgs.separator, usrArgs.fields];
   const getFileError = {
     ENOENT: `cut: ${fileName}: No such file or directory`,
     EACCES: `cut: ${fileName}: Permission denied`,
   };
-
-  reader(fileName, 'utf8', (err, lines) => {
-    if (err) {
-      display({error: getFileError[err.code], lines: ''});
-      return;
-    }
-    display({lines: performCut(lines, separator, fields), error: ''});
-  });
-};
-
-const showCutLinesOnStdin = function (usrArgs, stdin, display) {
   stdin.setEncoding('utf8');
   const [separator, fields] = [usrArgs.separator, usrArgs.fields];
   stdin.on('data', (chunk) => {
@@ -60,9 +48,12 @@ const showCutLinesOnStdin = function (usrArgs, stdin, display) {
       lines: `${performCut(chunk, separator, fields)}\n`, error: ''
     });
   });
+  stdin.on('error', (err) => {
+    display({error: getFileError[err.code], lines: ''});
+  });
 };
 
 module.exports = {
-  showCutLines, showCutLinesOnStdin, getFields,
+  showCutLinesOnStdin, getFields,
   getSeparatedFields, getReducedLines, performCut
 };
