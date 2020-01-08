@@ -8,21 +8,6 @@ describe('cut', function () {
   usageError +=
     'cut -c list [file ...]\n       cut -f list [-s] [-d delim] [file ...]';
 
-  // it('should cut according to userArgs', function (done) {
-  //   const userArgs = {separator: ' ', fields: one, fileNames: 'a.text'};
-  //   const reader = sinon.fake();
-
-  //   const display = function (output) {
-  //     assert.deepStrictEqual(output, {error: '', lines: 'hello\ni'});
-  //     done();
-  //   };
-
-  //   cut(userArgs, reader, display);
-  //   const [expectedFile, expectedCode] = reader.firstCall.args;
-  //   assert.deepStrictEqual([expectedFile, expectedCode], ['a.text', 'utf8']);
-  //   reader.firstCall.lastArg(null, 'hello\ni am here');
-  // });
-
   it('it should call display with fileContent is there', function (done) {
     const fields = 1;
     const userArgs = {separator: '\t', fields, fileNames: 'a.text'};
