@@ -4,7 +4,8 @@ const {createReadStream} = require('fs');
 
 const {stdin, stdout, stderr} = require('process');
 const {getParsedArgs} = require('./src/cmdLineArgsHandler');
-const {cut, selectReader} = require('./src/cutOperation');
+const {cut} = require('./src/cutOperation');
+const StreamReader = require('./src/streamClass');
 
 const display = function (output) {
   stderr.write(output.error);
@@ -14,8 +15,9 @@ const display = function (output) {
 const main = function () {
   const [, , ...cmdLineArgs] = process.argv;
   const userArgs = getParsedArgs(cmdLineArgs);
-  const reader = selectReader(createReadStream, stdin, userArgs.fileNames);
-  cut(userArgs, reader, display);
+  const stdInReader = () => stdin;
+  const myStreamReader = new StreamReader(stdInReader, createReadStream);
+  cut(userArgs, myStreamReader, display);
 };
 
 main();
